@@ -13,6 +13,13 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
+func executePayload(payloadString string) bool {
+
+	//TBD
+
+	return true
+}
+
 func main() {
 
 	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
