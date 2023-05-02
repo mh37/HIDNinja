@@ -24,7 +24,7 @@
         };
 
         socket.onmessage = (e) => {
-            output.innerHTML += "==> " + e.data + "\n";
+            output.innerHTML += "Delivered: " + e.data + "\n";
         };
 
         socket.onclose = event => {
