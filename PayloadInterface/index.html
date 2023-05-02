@@ -9,12 +9,13 @@
 
 <body>
 
-    <input id="input" type="text" >
+    <label for="cmdInput">Command</label>
+    <input id="cmdInput" type="text" >
     <button onclick="send()">Send</button>
     <pre id="output"></pre>
 
     <script>
-        var input = document.getElementById("input");
+        var input = document.getElementById("cmdInput");
         var output = document.getElementById("output");
         var socket = new WebSocket("ws://localhost:8080/echo");
 
