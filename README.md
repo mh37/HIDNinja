@@ -2,7 +2,7 @@
 
 ## Introduction
 
-HIDNinja is Linux based wireless HID injector with a remote payload interface.
+HIDNinja is Linux based wireless HID keystroke injector with a remote payload interface.
 
 ## Required Hardware
 
