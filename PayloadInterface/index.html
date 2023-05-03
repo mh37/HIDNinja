@@ -29,6 +29,7 @@
 
         socket.onclose = event => {
             output.innerHTML += "Connection Closed\n";
+            socket.send("Client Closed!")
         };
 
         socket.onerror = error => {
