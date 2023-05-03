@@ -39,7 +39,6 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 	log.Println("Client Connected")
 
 	reader(conn)
-
 }
 
 //reader function that listens for incoming payloads
