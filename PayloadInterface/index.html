@@ -44,14 +44,15 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   </header>
 
   <div class="w3-container">
-    <h5>Send Payload</h5>
-    <label for="cmdInput">Command</label>
-    <input id="cmdInput" type="text" >
-    <button onclick="send()">Send</button>
-    
-    <h5>Status</h5>
-    <pre id="output"></pre>
-
+    <div>
+        <h5>Send</h5>
+        <textarea name="Text1" id="cmdInput" cols="50" rows="5"></textarea><br/><br/>
+        <button onclick="send()">Send Payload</button>
+    </div>
+    <div>
+        <h5>Status</h5>
+        <pre id="output"></pre>
+    </div>
   </div>
   <hr>
 
