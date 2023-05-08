@@ -1,3 +1,7 @@
+#topContainer {
+    z-index:4;
+}
+
 #footer {
     position: fixed;
     text-align: center;
@@ -8,4 +12,18 @@
 
 #header {
     padding-top:22px;
+}
+
+#mySidebar {
+    z-index:3;
+    width:200px;
+}
+
+#content {
+    margin-left:300px;
+    margin-top:43px;
+}
+
+#myOverlay {
+
 }

@@ -1,127 +1,127 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title>HIDNinja</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
-</style>
-</head>
-<body class="w3-light-grey">
+<html lang="en">
+  <head>
+    <title>HIDNinja</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+    </style>
+  </head>
+  <body class="w3-light-grey">
 
-<!-- Top container -->
-<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
-  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
-  <span class="w3-bar-item w3-right">HIDNinja</span>
-</div>
-
-<!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:200px;" id="mySidebar"><br>
-  <div class="w3-container">
-    <h5>Dashboard</h5>
-  </div>
-  <div class="w3-bar-block">
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-home fa-fw"></i>  Home</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Payloads</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-history fa-fw"></i>  Log</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br>
-  </div>
-</nav>
-
-<!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
-
-<!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:300px;margin-top:43px;">
-
-  <!-- Header -->
-  <header id="header" class="w3-container">
-    <h5><b><i class="fa fa-dashboard"></i> Payload Interface</b></h5>
-  </header>
-
-  <div class="w3-container">
-    <div>
-        <h5>Send</h5>
-        <textarea name="Text1" id="cmdInput" cols="50" rows="5"></textarea><br/><br/>
-        <button onclick="send()">Send Payload</button>
+  <!-- Top container -->
+    <div id="topContainer" class="w3-bar w3-top w3-black w3-large">
+      <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+      <span class="w3-bar-item w3-right">HIDNinja</span>
     </div>
-    <div>
-        <h5>Status</h5>
-        <pre id="output"></pre>
+
+    <!-- Sidebar/menu -->
+    <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" id="mySidebar"><br>
+      <div class="w3-container">
+        <h5>Dashboard</h5>
+      </div>
+      <div class="w3-bar-block">
+        <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-home fa-fw"></i>  Home</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Payloads</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-history fa-fw"></i>  Log</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br>
+      </div>
+    </nav>
+
+    <!-- Overlay effect when opening sidebar on small screens -->
+    <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" title="close side menu" id="myOverlay"></div>
+
+    <!-- !PAGE CONTENT! -->
+    <div id="content" class="w3-main">
+
+      <!-- Header -->
+      <header id="header" class="w3-container">
+        <h5><b><i class="fa fa-dashboard"></i> Payload Interface</b></h5>
+      </header>
+
+      <div class="w3-container">
+        <div>
+            <h5>Send</h5>
+            <textarea name="Text1" id="cmdInput" cols="50" rows="5"></textarea><br/><br/>
+            <button onclick="send()">Send Payload</button>
+        </div>
+        <div>
+            <h5>Status</h5>
+            <pre id="output"></pre>
+        </div>
+      </div>
+      <hr>
+
+      <br>
+
+      <!-- Footer -->
+      <footer id="footer" class="w3-container w3-padding-16 w3-light-grey">
+        <p><a href="https://unit37.org">HIDNinja</a>, 2023</p>
+      </footer>
+      <!-- End page content -->
     </div>
-  </div>
-  <hr>
 
-  <br>
+    <script>
+    // Get the Sidebar
+    var mySidebar = document.getElementById("mySidebar");
 
-  <!-- Footer -->
-  <footer id="footer" class="w3-container w3-padding-16 w3-light-grey">
-    <p><a href="https://unit37.org">HIDNinja</a>, 2023</p>
-  </footer>
-  <!-- End page content -->
-</div>
+    // Get the DIV with overlay effect
+    var overlayBg = document.getElementById("myOverlay");
 
-<script>
-// Get the Sidebar
-var mySidebar = document.getElementById("mySidebar");
+    // Toggle between showing and hiding the sidebar, and add overlay effect
+    function w3_open() {
+      if (mySidebar.style.display === 'block') {
+        mySidebar.style.display = 'none';
+        overlayBg.style.display = "none";
+      } else {
+        mySidebar.style.display = 'block';
+        overlayBg.style.display = "block";
+      }
+    }
 
-// Get the DIV with overlay effect
-var overlayBg = document.getElementById("myOverlay");
+    // Close the sidebar with the close button
+    function w3_close() {
+      mySidebar.style.display = "none";
+      overlayBg.style.display = "none";
+    }
 
-// Toggle between showing and hiding the sidebar, and add overlay effect
-function w3_open() {
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-    overlayBg.style.display = "none";
-  } else {
-    mySidebar.style.display = 'block';
-    overlayBg.style.display = "block";
-  }
-}
+    //WebSocket communication
+    let input = document.getElementById("cmdInput");
+    let output = document.getElementById("output");
+    let socket = new WebSocket("ws://localhost:8080/echo");
 
-// Close the sidebar with the close button
-function w3_close() {
-  mySidebar.style.display = "none";
-  overlayBg.style.display = "none";
-}
+    socket.onopen = () => {
+        output.innerHTML += "Connection established\n";
+    };
 
-//WebSocket communication
-let input = document.getElementById("cmdInput");
-let output = document.getElementById("output");
-let socket = new WebSocket("ws://localhost:8080/echo");
+    socket.onmessage = (e) => {
+        output.innerHTML += "Delivered: " + e.data + "\n";
+    };
 
-socket.onopen = () => {
-    output.innerHTML += "Connection established\n";
-};
+    socket.onclose = event => {
+        output.innerHTML += "Connection Closed\n";
+        socket.send("Client Closed!")
+    };
 
-socket.onmessage = (e) => {
-    output.innerHTML += "Delivered: " + e.data + "\n";
-};
-
-socket.onclose = event => {
-    output.innerHTML += "Connection Closed\n";
-    socket.send("Client Closed!")
-};
-
-socket.onerror = error => {
-    console.log("Socket Error: ", error);
-    output.innerHTML += "Error " + error + "\n";
-};
+    socket.onerror = error => {
+        console.log("Socket Error: ", error);
+        output.innerHTML += "Error " + error + "\n";
+    };
 
 
-function send() {
-    socket.send(input.value);
-    input.value = "";
-}
-    
-</script>
+    function send() {
+        socket.send(input.value);
+        input.value = "";
+    }
+        
+    </script>
 
-</body>
+  </body>
 </html>
 
 
