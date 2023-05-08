@@ -14,6 +14,12 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
+func translationLayer(payloadString string) string {
+	// TBD
+
+	return ""
+}
+
 func executePayload(payloadString string) bool {
 
 	//TBD
