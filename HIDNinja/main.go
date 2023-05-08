@@ -27,10 +27,12 @@ func executePayload(payloadString string) bool {
 	return true
 }
 
+// Serve the index.html for the payload web interface
 func homePage(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../PayloadInterface/index.html")
 }
 
+// WebSocket endpoint
 func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
@@ -47,7 +49,7 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 	reader(conn)
 }
 
-//reader function that listens for incoming payloads
+// reader function that listens for incoming payloads
 func reader(conn *websocket.Conn) {
 	// keep listening for incoming payloads
 	for {
@@ -66,6 +68,7 @@ func reader(conn *websocket.Conn) {
 	}
 }
 
+// Defines the routes, such as the WebSocket Endpoint and Homepage
 func setupRoutes() {
 	http.HandleFunc("/echo", wsEndpoint)
 	http.HandleFunc("/", homePage)
