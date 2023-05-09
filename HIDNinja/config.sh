@@ -2,8 +2,8 @@
 
 # Configuration for USB Gadget Driver
 # This is based on examples from the follwing sources: 
-# - https://github.com/mtlynch/ansible-role-key-mime-pi/blob/master/files/enable-rpi-hid
 # - https://github.com/girst/sendHID-mirror-of-git.gir.st/blob/master/README.md
+# - https://github.com/mtlynch/ansible-role-key-mime-pi/blob/master/files/enable-rpi-hid
 
 # Echo commands to stdout.
 set -x
