@@ -14,6 +14,15 @@ set -e
 # Treat undefined environment variables as errors.
 set -u
 
+#  activate the device tree overlay dwc2 and load the corresponding kernel module
+if ! grep 'dtoverlay=dwc2' /boot/config; then
+  echo "dtoverlay=dwc2" >> /boot/config.txt
+fi
+
+if ! grep dwc2 /etc/modules; then
+  echo "dwc2" >> /etc/modules
+fi
+
 modprobe libcomposite
 
 cd /sys/kernel/config/usb_gadget/
