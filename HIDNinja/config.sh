@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Configuration for USB Gadget Driver
+# Configuration script for the USB Gadget Driver HID mimicing
 # This is based on examples from the follwing sources: 
 # - https://github.com/girst/sendHID-mirror-of-git.gir.st/blob/master/README.md
 # - https://github.com/mtlynch/ansible-role-key-mime-pi/blob/master/files/enable-rpi-hid
