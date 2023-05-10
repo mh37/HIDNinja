@@ -5,9 +5,6 @@
 # - https://github.com/girst/sendHID-mirror-of-git.gir.st/blob/master/README.md
 # - https://github.com/mtlynch/ansible-role-key-mime-pi/blob/master/files/enable-rpi-hid
 
-# Echo commands to stdout.
-set -x
-
 # Exit on first error.
 set -e
 
@@ -23,8 +20,10 @@ if ! grep dwc2 /etc/modules; then
   echo "dwc2" >> /etc/modules
 fi
 
+# enable libomposite driver on the SBC
 modprobe libcomposite
 
+# create USB HID gadget
 cd /sys/kernel/config/usb_gadget/
 mkdir -p g1
 cd g1
