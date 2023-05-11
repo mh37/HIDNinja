@@ -1,0 +1,13 @@
+# /usr/lib/systemd/system/hidninja.service
+
+[Unit]
+Description=HIDNinja
+After=systemd-modules-load.service
+ 
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/hidninja
+ 
+[Install]
+WantedBy=sysinit.target
