@@ -1,11 +1,5 @@
 #!/bin/bash -e
 
-#enable deice tree overlay
-echo "dtoverlay=dwc2" | sudo tee -a /boot/config.txt
-echo "dwc2" | sudo tee -a /etc/modules
-
-#enable libcomposite driver
-sudo echo "libcomposite" | sudo tee -a /etc/modules
 modprobe libcomposite
 
 
@@ -44,7 +38,3 @@ ln -s functions/hid.usb0 configs/c.1/
 
 
 ls /sys/class/udc > UDC
-
-# start service and enable run on boot
-# sudo systemctl start hidninja
-# sudo systemctl enable hidninja
