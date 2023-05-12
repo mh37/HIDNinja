@@ -1,13 +1,13 @@
 # /usr/lib/systemd/system/hidninja.service
 
 [Unit]
-Description=HIDNinja
-After=systemd-modules-load.service
+Description=HIDNinja USB Gadget
+After=syslog.target
  
 [Service]
 Type=oneshot
-RemainAfterExit=yes
+User=root
 ExecStart=/usr/bin/hidninja
  
 [Install]
-WantedBy=sysinit.target
+WantedBy=local-fs.target
