@@ -27,7 +27,7 @@ cp enableHIDmode "$ENABLE_RPI_HID_PATH"
 chmod +x "$ENABLE_RPI_HID_PATH"
 
 sed -e "s@/usr/bin/hidninja@${ENABLE_RPI_HID_PATH}@g" \
-  usb-gadget.service > /lib/systemd/system/usb-gadget.service
+  usb-gadget > /lib/systemd/system/usb-gadget.service
 
 # start service and enable run on boot
 systemctl daemon-reload
