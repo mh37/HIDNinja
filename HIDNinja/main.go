@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
 
 	"github.com/gorilla/websocket"
@@ -15,31 +16,38 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
+//Translates char/key into HID compatible code
 func translationLayer(payloadString string) string {
 	// TBD
 
 	return ""
 }
 
+//execute bash command
+func execCmd(command string, argsv []string) (err error) {
+	args := argsv
+	cmdObj := exec.Command(command, args...)
+	cmdObj.Stdout = os.Stdout
+	cmdObj.Stderr = os.Stderr
+	err = cmdObj.Run()
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	return nil
+}
+
 func executePayload(payloadString string) bool {
 
 	//For testing purposes at the moment
+	sudo := "sudo"
 	app := "echo"
 	arg0 := "-ne"
-	arg1 := "\\0\\0\\x4\\0\\0\\0\\0\\0"
-	arg2 := ">"
-	arg3 := "/dev/hidg0"
+	key := "\\0\\0\\x4\\0\\0\\0\\0\\0"
+	arg1 := ">"
+	gadget := "/dev/hidg0"
 
-	cmd := exec.Command(app, arg0, arg1, arg2, arg3)
-	stdout, err := cmd.Output()
-
-	if err != nil {
-		fmt.Println(err.Error())
-		return false
-	}
-
-	// Print the output
-	fmt.Println(string(stdout))
+	execCmd(sudo, []string{app, arg0, key, arg1, gadget})
 
 	return true
 }
