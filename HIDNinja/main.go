@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os/exec"
 
 	"github.com/gorilla/websocket"
 )
@@ -22,7 +23,23 @@ func translationLayer(payloadString string) string {
 
 func executePayload(payloadString string) bool {
 
-	//TBD
+	//For testing purposes at the moment
+	app := "echo"
+	arg0 := "-ne"
+	arg1 := "\\0\\0\\x4\\0\\0\\0\\0\\0"
+	arg2 := ">"
+	arg3 := "/dev/hidg0"
+
+	cmd := exec.Command(app, arg0, arg1, arg2, arg3)
+	stdout, err := cmd.Output()
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+
+	// Print the output
+	fmt.Println(string(stdout))
 
 	return true
 }
@@ -65,6 +82,9 @@ func reader(conn *websocket.Conn) {
 		if err = conn.WriteMessage(msgType, msg); err != nil {
 			return
 		}
+
+		//execute payload
+		executePayload("")
 	}
 }
 
