@@ -24,9 +24,10 @@ func translationLayer(payloadString string) string {
 }
 
 //execute bash command
-func execCmd(command string, argsv []string) (err error) {
-	args := argsv
-	cmdObj := exec.Command(command, args...)
+func execCmd(key string) (err error) {
+	//example cmd: echo -ne "\0\0\x4\0\0\0\0\0" > /dev/hidg0
+	gadget := "/dev/hidg0"
+	cmdObj := exec.Command("bash", "-c", `echo -ne "`+key+`" > `+gadget)
 	cmdObj.Stdout = os.Stdout
 	cmdObj.Stderr = os.Stderr
 	err = cmdObj.Run()
@@ -40,15 +41,9 @@ func execCmd(command string, argsv []string) (err error) {
 func executePayload(payloadString string) bool {
 
 	//For testing purposes at the moment
-	//example cmd: echo -ne "\0\0\x4\0\0\0\0\0" > /dev/hidg0
-	sudo := "sudo"
-	app := "echo"
-	arg0 := "-ne"
-	key := "\\0\\0\\x4\\0\\0\\0\\0\\0"
-	arg1 := ">"
-	gadget := "/dev/hidg0"
-
-	execCmd(sudo, []string{app, arg0, key, arg1, gadget})
+	// letter 'a'
+	key := `\0\0\x4\0\0\0\0\0`
+	execCmd(key)
 
 	return true
 }
