@@ -105,5 +105,5 @@ func setupRoutes() {
 func main() {
 	setupRoutes()
 	log.Println("Listening...")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":3000", nil))
 }
