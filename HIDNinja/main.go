@@ -44,6 +44,9 @@ func executePayload(payloadString string) bool {
 	// letter 'a'
 	key := `\0\0\x4\0\0\0\0\0`
 	execCmd(key)
+	// release key
+	key = `\0\0\0\0\0\0\0\0`
+	execCmd(key)
 
 	return true
 }
