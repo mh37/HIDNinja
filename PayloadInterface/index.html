@@ -81,7 +81,7 @@ function w3_close() {
 //WebSocket communication
 let input = document.getElementById("cmdInput");
 let output = document.getElementById("output");
-let socket = new WebSocket("ws://localhost:8080/echo");
+let socket = new WebSocket("ws://localhost:3000/echo");
 
 socket.onopen = () => {
     output.innerHTML += "Connection established\n";
