@@ -40,6 +40,7 @@ func execCmd(command string, argsv []string) (err error) {
 func executePayload(payloadString string) bool {
 
 	//For testing purposes at the moment
+	//example cmd: echo -ne "\0\0\x4\0\0\0\0\0" > /dev/hidg0
 	sudo := "sudo"
 	app := "echo"
 	arg0 := "-ne"
