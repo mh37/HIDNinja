@@ -5,132 +5,131 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/exec"
 
 	"github.com/gorilla/websocket"
 )
 
-var keycodeMap = map[int]string{
-	3:   `\0\0\x48\0\0\0\0\0`, // Pause / Break
-	8:   `\0\0\x2a\0\0\0\0\0`, // Backspace / Delete
-	9:   `\0\0\x2b\0\0\0\0\0`, // Tab
-	12:  `\0\0\x53\0\0\0\0\0`, // Clear
-	13:  `\0\0\x28\0\0\0\0\0`, // Enter
-	16:  `\0\0\xe1\0\0\0\0\0`, // Shift (Left)
-	17:  `\0\0\xe0\0\0\0\0\0`, // Ctrl (left)
-	18:  `\0\0\xe1\0\0\0\0\0`, // Alt (left)
-	19:  `\0\0\x48\0\0\0\0\0`, // Pause / Break
-	20:  `\0\0\x39\0\0\0\0\0`, // Caps Lock
-	21:  `\0\0\x90\0\0\0\0\0`, // Hangeul
-	25:  `\0\0\x91\0\0\0\0\0`, // Hanja
-	27:  `\0\0\x29\0\0\0\0\0`, // Escape
-	32:  `\0\0\x2c\0\0\0\0\0`, // Spacebar
-	33:  `\0\0\x4b\0\0\0\0\0`, // Page Up
-	34:  `\0\0\x4e\0\0\0\0\0`, // Page Down
-	35:  `\0\0\x4d\0\0\0\0\0`, // End
-	36:  `\0\0\x4a\0\0\0\0\0`, // Home
-	37:  `\0\0\x50\0\0\0\0\0`, // Left Arrow
-	38:  `\0\0\x52\0\0\0\0\0`, // Up Arrow
-	39:  `\0\0\x4f\0\0\0\0\0`, // Right Arrow
-	40:  `\0\0\x51\0\0\0\0\0`, // Down Arrow
-	41:  `\0\0\x77\0\0\0\0\0`, // Select
-	43:  `\0\0\x74\0\0\0\0\0`, // Execute
-	44:  `\0\0\x46\0\0\0\0\0`, // Print Screen
-	45:  `\0\0\x49\0\0\0\0\0`, // Insert
-	46:  `\0\0\x4c\0\0\0\0\0`, // Delete
-	47:  `\0\0\x75\0\0\0\0\0`, // Help
-	48:  `\0\0\x27\0\0\0\0\0`, // 0
-	49:  `\0\0\x1e\0\0\0\0\0`, // 1
-	50:  `\0\0\x1f\0\0\0\0\0`, // 2
-	51:  `\0\0\x20\0\0\0\0\0`, // 3
-	52:  `\0\0\x21\0\0\0\0\0`, // 4
-	53:  `\0\0\x22\0\0\0\0\0`, // 5
-	54:  `\0\0\x23\0\0\0\0\0`, // 6
-	55:  `\0\0\x24\0\0\0\0\0`, // 7
-	56:  `\0\0\x25\0\0\0\0\0`, // 8
-	57:  `\0\0\x26\0\0\0\0\0`, // 9
-	59:  `\0\0\x33\0\0\0\0\0`, // Semicolon
-	60:  `\0\0\xc5\0\0\0\0\0`, // <
-	61:  `\0\0\x2e\0\0\0\0\0`, // Equal sign
-	65:  `\0\0\x04\0\0\0\0\0`, // a
-	66:  `\0\0\x05\0\0\0\0\0`, // b
-	67:  `\0\0\x06\0\0\0\0\0`, // c
-	68:  `\0\0\x07\0\0\0\0\0`, // d
-	69:  `\0\0\x08\0\0\0\0\0`, // e
-	70:  `\0\0\x09\0\0\0\0\0`, // f
-	71:  `\0\0\x0a\0\0\0\0\0`, // g
-	72:  `\0\0\x0b\0\0\0\0\0`, // h
-	73:  `\0\0\x0c\0\0\0\0\0`, // i
-	74:  `\0\0\x0d\0\0\0\0\0`, // j
-	75:  `\0\0\x0e\0\0\0\0\0`, // k
-	76:  `\0\0\x0f\0\0\0\0\0`, // l
-	77:  `\0\0\x10\0\0\0\0\0`, // m
-	78:  `\0\0\x11\0\0\0\0\0`, // n
-	79:  `\0\0\x12\0\0\0\0\0`, // o
-	80:  `\0\0\x13\0\0\0\0\0`, // p
-	81:  `\0\0\x14\0\0\0\0\0`, // q
-	82:  `\0\0\x15\0\0\0\0\0`, // r
-	83:  `\0\0\x16\0\0\0\0\0`, // s
-	84:  `\0\0\x17\0\0\0\0\0`, // t
-	85:  `\0\0\x18\0\0\0\0\0`, // u
-	86:  `\0\0\x19\0\0\0\0\0`, // v
-	87:  `\0\0\x1a\0\0\0\0\0`, // w
-	88:  `\0\0\x1b\0\0\0\0\0`, // x
-	89:  `\0\0\x1c\0\0\0\0\0`, // y
-	90:  `\0\0\x1d\0\0\0\0\0`, // z
-	91:  `\0\0\xe3\0\0\0\0\0`, // Windows key / Meta Key (Left)
-	96:  `\0\0\x62\0\0\0\0\0`, // Numpad 0
-	97:  `\0\0\x59\0\0\0\0\0`, // Numpad 1
-	98:  `\0\0\x5a\0\0\0\0\0`, // Numpad 2
-	99:  `\0\0\x5b\0\0\0\0\0`, // Numpad 3
-	100: `\0\0\x5c\0\0\0\0\0`, // Numpad 4
-	101: `\0\0\x5d\0\0\0\0\0`, // Numpad 5
-	102: `\0\0\x5e\0\0\0\0\0`, // Numpad 6
-	103: `\0\0\x5f\0\0\0\0\0`, // Numpad 7
-	104: `\0\0\x60\0\0\0\0\0`, // Numpad 8
-	105: `\0\0\x61\0\0\0\0\0`, // Numpad 9
-	112: `\0\0\x3b\0\0\0\0\0`, // F1
-	113: `\0\0\x3c\0\0\0\0\0`, // F2
-	114: `\0\0\x3d\0\0\0\0\0`, // F3
-	115: `\0\0\x3e\0\0\0\0\0`, // F4
-	116: `\0\0\x3f\0\0\0\0\0`, // F5
-	117: `\0\0\x40\0\0\0\0\0`, // F6
-	118: `\0\0\x41\0\0\0\0\0`, // F7
-	119: `\0\0\x42\0\0\0\0\0`, // F8
-	120: `\0\0\x43\0\0\0\0\0`, // F9
-	121: `\0\0\x44\0\0\0\0\0`, // F10
-	122: `\0\0\x45\0\0\0\0\0`, // F11
-	123: `\0\0\x46\0\0\0\0\0`, // F12
-	124: `\0\0\x68\0\0\0\0\0`, // F13
-	125: `\0\0\x69\0\0\0\0\0`, // F14
-	126: `\0\0\x6a\0\0\0\0\0`, // F15
-	127: `\0\0\x6b\0\0\0\0\0`, // F16
-	128: `\0\0\x6c\0\0\0\0\0`, // F17
-	129: `\0\0\x6d\0\0\0\0\0`, // F18
-	130: `\0\0\x6e\0\0\0\0\0`, // F19
-	131: `\0\0\x6f\0\0\0\0\0`, // F20
-	132: `\0\0\x70\0\0\0\0\0`, // F21
-	133: `\0\0\x71\0\0\0\0\0`, // F22
-	134: `\0\0\x72\0\0\0\0\0`, // F23
-	144: `\0\0\x53\0\0\0\0\0`, // Num Lock
-	145: `\0\0\x47\0\0\0\0\0`, // Scroll Lock
-	161: `\0\0\x1e\0\0\0\0\0`, // !
-	163: `\0\0\x32\0\0\0\0\0`, // Hash
-	173: `\0\0\x2d\0\0\0\0\0`, // Minus
-	179: `\0\0\xe8\0\0\0\0\0`, // Media play/pause
-	168: `\0\0\xfa\0\0\0\0\0`, // Refresh
-	186: `\0\0\x33\0\0\0\0\0`, // Semicolon
-	187: `\0\0\x2e\0\0\0\0\0`, // Equal sign
-	188: `\0\0\x36\0\0\0\0\0`, // Comma
-	189: `\0\0\x2d\0\0\0\0\0`, // Minus sign
-	190: `\0\0\x37\0\0\0\0\0`, // Period
-	191: `\0\0\x38\0\0\0\0\0`, // Forward slash
-	192: `\0\0\x35\0\0\0\0\0`, // Accent grave
-	219: `\0\0\x2f\0\0\0\0\0`, // Left bracket ([, {])
-	220: `\0\0\x31\0\0\0\0\0`, // Back slash
-	221: `\0\0\x30\0\0\0\0\0`, // Right bracket (], })
-	222: `\0\0\x34\0\0\0\0\0`, // Single quote
-	223: `\0\0\x35\0\0\0\0\0`, // Accent grave (`)
+var keycodeMap = map[int]byte{
+	3:   0x48, // Pause / Break
+	8:   0x2a, // Backspace / Delete
+	9:   0x2b, // Tab
+	12:  0x53, // Clear
+	13:  0x28, // Enter
+	16:  0xe1, // Shift (Left)
+	17:  0xe0, // Ctrl (left)
+	18:  0xe1, // Alt (left)
+	19:  0x48, // Pause / Break
+	20:  0x39, // Caps Lock
+	21:  0x90, // Hangeul
+	25:  0x91, // Hanja
+	27:  0x29, // Escape
+	32:  0x2c, // Spacebar
+	33:  0x4b, // Page Up
+	34:  0x4e, // Page Down
+	35:  0x4d, // End
+	36:  0x4a, // Home
+	37:  0x50, // Left Arrow
+	38:  0x52, // Up Arrow
+	39:  0x4f, // Right Arrow
+	40:  0x51, // Down Arrow
+	41:  0x77, // Select
+	43:  0x74, // Execute
+	44:  0x46, // Print Screen
+	45:  0x49, // Insert
+	46:  0x4c, // Delete
+	47:  0x75, // Help
+	48:  0x27, // 0
+	49:  0x1e, // 1
+	50:  0x1f, // 2
+	51:  0x20, // 3
+	52:  0x21, // 4
+	53:  0x22, // 5
+	54:  0x23, // 6
+	55:  0x24, // 7
+	56:  0x25, // 8
+	57:  0x26, // 9
+	59:  0x33, // Semicolon
+	60:  0xc5, // <
+	61:  0x2e, // Equal sign
+	65:  0x04, // a
+	66:  0x05, // b
+	67:  0x06, // c
+	68:  0x07, // d
+	69:  0x08, // e
+	70:  0x09, // f
+	71:  0x0a, // g
+	72:  0x0b, // h
+	73:  0x0c, // i
+	74:  0x0d, // j
+	75:  0x0e, // k
+	76:  0x0f, // l
+	77:  0x10, // m
+	78:  0x11, // n
+	79:  0x12, // o
+	80:  0x13, // p
+	81:  0x14, // q
+	82:  0x15, // r
+	83:  0x16, // s
+	84:  0x17, // t
+	85:  0x18, // u
+	86:  0x19, // v
+	87:  0x1a, // w
+	88:  0x1b, // x
+	89:  0x1c, // y
+	90:  0x1d, // z
+	91:  0xe3, // Windows key / Meta Key (Left)
+	96:  0x62, // Numpad 0
+	97:  0x59, // Numpad 1
+	98:  0x5a, // Numpad 2
+	99:  0x5b, // Numpad 3
+	100: 0x5c, // Numpad 4
+	101: 0x5d, // Numpad 5
+	102: 0x5e, // Numpad 6
+	103: 0x5f, // Numpad 7
+	104: 0x60, // Numpad 8
+	105: 0x61, // Numpad 9
+	112: 0x3b, // F1
+	113: 0x3c, // F2
+	114: 0x3d, // F3
+	115: 0x3e, // F4
+	116: 0x3f, // F5
+	117: 0x40, // F6
+	118: 0x41, // F7
+	119: 0x42, // F8
+	120: 0x43, // F9
+	121: 0x44, // F10
+	122: 0x45, // F11
+	123: 0x46, // F12
+	124: 0x68, // F13
+	125: 0x69, // F14
+	126: 0x6a, // F15
+	127: 0x6b, // F16
+	128: 0x6c, // F17
+	129: 0x6d, // F18
+	130: 0x6e, // F19
+	131: 0x6f, // F20
+	132: 0x70, // F21
+	133: 0x71, // F22
+	134: 0x72, // F23
+	144: 0x53, // Num Lock
+	145: 0x47, // Scroll Lock
+	161: 0x1e, // !
+	163: 0x32, // Hash
+	173: 0x2d, // Minus
+	179: 0xe8, // Media play/pause
+	168: 0xfa, // Refresh
+	186: 0x33, // Semicolon
+	187: 0x2e, // Equal sign
+	188: 0x36, // Comma
+	189: 0x2d, // Minus sign
+	190: 0x37, // Period
+	191: 0x38, // Forward slash
+	192: 0x35, // Accent grave
+	219: 0x2f, // Left bracket ([, {])
+	220: 0x31, // Back slash
+	221: 0x30, // Right bracket (], })
+	222: 0x34, // Single quote
+	223: 0x35, // Accent grave (`)
 }
 
 // Defining the read and write buffer size for the upgrader
@@ -139,26 +138,25 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-//Translates char/key into HID compatible code
-func translationLayer(c rune) string {
-	// for example: letter 'a' --> `\0\0\x4\0\0\0\0\0`
+// Translates char/key into HID compatible code
+func translationLayer(c rune) byte {
 	hidCode := keycodeMap[int(c)]
 	return hidCode
 }
 
-//execute bash command
-func execCmd(key string) (err error) {
-	//example cmd: echo -ne "\0\0\x4\0\0\0\0\0" > /dev/hidg0
-	gadget := "/dev/hidg0"
-	cmdObj := exec.Command("bash", "-c", `echo -ne "`+key+`" > `+gadget)
-	cmdObj.Stdout = os.Stdout
-	cmdObj.Stderr = os.Stderr
-	err = cmdObj.Run()
+func sendKey(code []byte) {
+	f, err := os.OpenFile("/dev/hidg0", os.O_APPEND|os.O_WRONLY, 0666)
 	if err != nil {
-		log.Fatal(err)
-		return err
+		fmt.Println(err)
+		return
 	}
-	return nil
+	defer f.Close()
+
+	_, err = f.Write(code)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
 
 // TODO: This works for single character payloads but not more. Needs investigating.
@@ -167,10 +165,9 @@ func executePayload(payloadString string) bool {
 	//run through each character/rune in the payload string
 	for _, ch := range payloadString {
 		key := translationLayer(ch)
-		fmt.Println("HID KEY: " + key)
-		execCmd(key)
-		// release key
-		execCmd(`\0\0\0\0\0\0\0\0`)
+		sendKey([]byte{0x00, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00})
+		// release keys
+		sendKey([]byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00})
 	}
 
 	return true
