@@ -227,6 +227,8 @@ func executePayload(payloadString string) bool {
 	//convert to upper case for mapping
 	payloadString = strings.ToUpper(payloadString)
 
+	//TODO special treatment for modifiers needed
+
 	//run through each character/rune in the payload string
 	for _, ch := range payloadString {
 		key := translationLayer(string(ch))
