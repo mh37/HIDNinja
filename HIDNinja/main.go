@@ -159,12 +159,13 @@ func sendKey(code []byte) {
 	}
 }
 
-// TODO: This works for single character payloads but not more. Needs investigating.
+// TODO: Not all keycodes are correct, why?
 func executePayload(payloadString string) bool {
 
 	//run through each character/rune in the payload string
 	for _, ch := range payloadString {
 		key := translationLayer(ch)
+		fmt.Println(ch) // for testing purposes, remove later
 		sendKey([]byte{0x00, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00})
 		// release keys
 		sendKey([]byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00})
