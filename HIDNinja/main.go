@@ -9,6 +9,137 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+/*
+Dec		Hex				CharDescription
+0:		0x00, //		NUL	Null
+1:		0x01, //		SOH	Start of Header
+2:		0x02, //		STX	Start of Text
+3:		0x03, //		ETX	End of Text
+4:		0x04, //		EOT	End of Transmission
+5:		0x05, //		ENQ	Enquiry
+6:		0x06, //		ACK	Acknowledge
+7:		0x07, //		BEL	Bell
+8:		0x08, //		BS	Backspace
+9:		0x09, //		HT	Horizontal Tab
+10:		0x0A, //		LF	Line Feed
+11:		0x0B, //		VT	Vertical Tab
+12:		0x0C, //		FF	Form Feed
+13:		0x0D, //		CR	Carriage Return
+14:		0x0E, //		SO	Shift Out
+15:		0x0F, //		SI	Shift In
+16:		0x10, //		DLE	Data Link Escape
+17:		0x11, //		DC1	Device Control 1
+18:		0x12, //		DC2	Device Control 2
+19:		0x13, //		DC3	Device Control 3
+20:		0x14, //		DC4	Device Control 4
+21:		0x15, //		NAK	Negative Acknowledge
+22:		0x16, //		SYN	Synchronize
+23:		0x17, //		ETB	End of Transmission Block
+24:		0x18, //		CAN	Cancel
+25:		0x19, //		EM	End of Medium
+26:		0x1A, //		SUB	Substitute
+27:		0x1B, //		ESC	Escape
+28:		0x1C, //		FS	File Separator
+29:		0x1D, //		GS	Group Separator
+30:		0x1E, //		RS	Record Separator
+31:		0x1F, //		US	Unit Separator
+32:		0x20, //		space	Space
+33:		0x21, //		!	Exclamation mark
+34:		0x22, //		"	Double quote
+35:		0x23, //		#	Number
+36:		0x24, //		$	Dollar sign
+37:		0x25, //		%	Percent
+38:		0x26, //		&	Ampersand
+39:		0x27, //		'	Single quote
+40:		0x28, //		(	Left parenthesis
+41:		0x29, //		)	Right parenthesis
+42:		0x2A, //		*	Asterisk
+43:		0x2B, //		+	Plus
+44:		0x2C, //		,	Comma
+45:		0x2D, //		-	Minus
+46:		0x2E, //		.	Period
+47:		0x2F, //		/	Slash
+48:		0x30, //		0	Zero
+49:		0x31, //		1	One
+50:		0x32, //		2	Two
+51:		0x33, //		3	Three
+52:		0x34, //		4	Four
+53:		0x35, //		5	Five
+54:		0x36, //		6	Six
+55:		0x37, //		7	Seven
+56:		0x38, //		8	Eight
+57:		0x39, //		9	Nine
+58:		0x3A, //		:	Colon
+59:		0x3B, //		;	Semicolon
+60:		0x3C, //		<	Less than
+61:		0x3D, //		=	Equality sign
+62:		0x3E, //		>	Greater than
+63:		0x3F, //		?	Question mark
+64:		0x40, //		@	At sign
+65:		0x41, //		A	Capital A
+66:		0x42, //		B	Capital B
+67:		0x43, //		C	Capital C
+68:		0x44, //		D	Capital D
+69:		0x45, //		E	Capital E
+70:		0x46, //		F	Capital F
+71:		0x47, //		G	Capital G
+72:		0x48, //		H	Capital H
+73:		0x49, //		I	Capital I
+74:		0x4A, //		J	Capital J
+75:		0x4B, //		K	Capital K
+76:		0x4C, //		L	Capital L
+77:		0x4D, //		M	Capital M
+78:		0x4E, //		N	Capital N
+79:		0x4F, //		O	Capital O
+80:		0x50, //		P	Capital P
+81:		0x51, //		Q	Capital Q
+82:		0x52, //		R	Capital R
+83:		0x53, //		S	Capital S
+84:		0x54, //		T	Capital T
+85:		0x55, //		U	Capital U
+86:		0x56, //		V	Capital V
+87:		0x57, //		W	Capital W
+88:		0x58, //		X	Capital X
+89:		0x59, //		Y	Capital Y
+90:		0x5A, //		Z	Capital Z
+91:		0x5B, //		[	Left square bracket
+92:		0x5C, //		\	Backslash
+93:		0x5D, //		]	Right square bracket
+94:		0x5E, //		^	Caret / circumflex
+95:		0x5F, //		_	Underscore
+96:		0x60, //		`	Grave / accent
+97:		0x61, //		a	Small a
+98:		0x62, //		b	Small b
+99:		0x63, //		c	Small c
+100:	0x64, //	 	d	Small d
+101:	0x65, //	 	e	Small e
+102:	0x66, //	 	f	Small f
+103:	0x67, //	 	g	Small g
+104:	0x68, //	 	h	Small h
+105:	0x69, //	 	i	Small i
+106:	0x6A, //	 	j	Small j
+107:	0x6B, //	 	k	Small k
+108:	0x6C, //	 	l	Small l
+109:	0x6D, //	 	m	Small m
+110:	0x6E, //	 	n	Small n
+111:	0x6F, //	 	o	Small o
+112:	0x70, //	 	p	Small p
+113:	0x71, //	 	q	Small q
+114:	0x72, //	 	r	Small r
+115:	0x73, //	 	s	Small s
+116:	0x74, //	 	t	Small t
+117:	0x75, //	 	u	Small u
+118:	0x76, //	 	v	Small v
+119:	0x77, //	 	w	Small w
+120:	0x78, //	 	x	Small x
+121:	0x79, //	 	y	Small y
+122:	0x7A, //	 	z	Small z
+123:	0x7B, //	 	{	Left curly bracket
+124:	0x7C, //	 	|	Vertical bar
+125:	0x7D, //	 	}	Right curly bracket
+126:	0x7E, //	 	~	Tilde
+127:	0x7F, //	 	DEL	Delete
+*/
 var keycodeMap = map[int]byte{
 	3:   0x48, // Pause / Break
 	8:   0x2a, // Backspace / Delete
