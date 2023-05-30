@@ -25,8 +25,10 @@ func sendKey(code []byte) {
 
 func executePayload(payloadString string) bool {
 
-	//convert to upper case for mapping
+	//convert to upper case for standardized mapping
 	payloadString = strings.ToUpper(payloadString)
+
+	// TODO insert shift key scancodes for genuine uppercase
 
 	//TODO special treatment for modifiers needed
 
