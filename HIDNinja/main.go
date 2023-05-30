@@ -46,6 +46,6 @@ func executePayload(payloadString string) bool {
 
 func main() {
 	setupRoutes()
-	log.Println("Listening...")
+	log.Println("Waiting for client ...")
 	log.Fatal(http.ListenAndServe(":3000", nil))
 }
