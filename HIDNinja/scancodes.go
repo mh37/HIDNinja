@@ -2,6 +2,7 @@ package main
 
 import "log"
 
+//scan code table is a modified version of https://github.com/gsora/hid-compiler/blob/master/compiler/Scancodes.go
 var scanCodes = map[string]byte{
 	"LCTRL":              0x01,
 	"LSHIFT":             0x02,
