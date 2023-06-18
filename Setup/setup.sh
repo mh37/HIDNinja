@@ -14,7 +14,7 @@ set -u
 if ! grep 'dtoverlay=dwc2' /boot/config; then
   echo "dtoverlay=dwc2" >> /boot/config.txt
 fi
-# Add dwc2 and libcomposite to /etc/modules
+# Add dwc2 to /etc/modules
 if ! grep dwc2 /etc/modules; then
   echo "dwc2" >> /etc/modules
 fi

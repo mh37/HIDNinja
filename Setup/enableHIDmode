@@ -6,10 +6,11 @@ set -e
 # Treat undefined environment variables as errors.
 set -u
 
+# load libcomposite kernel module, so we can create and change USB device configs 
 modprobe libcomposite
 
 
-# Creating the USB Gadget
+# Creating a new USB Gadget
 cd /sys/kernel/config/usb_gadget/
 mkdir g1 
 cd g1
