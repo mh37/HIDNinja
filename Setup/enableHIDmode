@@ -6,7 +6,7 @@ set -e
 # Treat undefined environment variables as errors.
 set -u
 
-# load libcomposite kernel module, so we can create and change USB device configs 
+# load libcomposite kernel module, so we can create and change USB device configs. This is a prerequisite 
 modprobe libcomposite
 
 
@@ -20,14 +20,14 @@ echo 0x0104 > idProduct # Multifunction Composite Gadget
 echo 0x0100 > bcdDevice # v1.0.0
 echo 0x0200 > bcdUSB    # USB 2.0
 
-echo 0xEF > bDeviceClass
-echo 0x02 > bDeviceSubClass
-echo 0x01 > bDeviceProtocol
+echo 0xEF > bDeviceClass    # common class
+echo 0x02 > bDeviceSubClass 
+echo 0x01 > bDeviceProtocol # Interface Association Descriptor (IAD)
 
 # Define properties
-STRINGS_DIR="strings/0x409"
-mkdir -p strings/0x409
-echo "fedcba9876543210" > "${STRINGS_DIR}/serialnumber"
+STRINGS_DIR="strings/0x409" 
+mkdir -p strings/0x409      # US English
+echo "fedcba9876543210" > "${STRINGS_DIR}/serialnumber" # Hello World! Feel free to change the hex value to something else 
 echo "Unit37"        > "${STRINGS_DIR}/manufacturer"
 echo "HIDNinja Keyboard"   > "${STRINGS_DIR}/product"
 
@@ -36,7 +36,7 @@ FUNCTIONS_DIR="functions/hid.usb0"
 mkdir -p "$FUNCTIONS_DIR"
 echo 1 > "${FUNCTIONS_DIR}/protocol" # Keyboard
 echo 0 > "${FUNCTIONS_DIR}/subclass" # No subclass
-echo 8 > "${FUNCTIONS_DIR}/report_length"
+echo 8 > "${FUNCTIONS_DIR}/report_length" #8 bytes
 # Write the report descriptor
 # Source: https://www.kernel.org/doc/html/latest/usb/gadget_hid.html
 echo -ne \\x05\\x01\\x09\\x06\\xa1\\x01\\x05\\x07\\x19\\xe0\\x29\\xe7\\x15\\x00\\x25\\x01\\x75\\x01\\x95\\x08\\x81\\x02\\x95\\x01\\x75\\x08\\x81\\x03\\x95\\x05\\x75\\x01\\x05\\x08\\x19\\x01\\x29\\x05\\x91\\x02\\x95\\x01\\x75\\x03\\x91\\x03\\x95\\x06\\x75\\x08\\x15\\x00\\x25\\x65\\x05\\x07\\x19\\x00\\x29\\x65\\x81\\x00\\xc0 > "${FUNCTIONS_DIR}/report_desc"
@@ -44,13 +44,15 @@ echo -ne \\x05\\x01\\x09\\x06\\xa1\\x01\\x05\\x07\\x19\\xe0\\x29\\xe7\\x15\\x00\
 CONFIG_INDEX=1
 CONFIGS_DIR="configs/c.${CONFIG_INDEX}"
 mkdir -p "$CONFIGS_DIR"
-echo 250 > "${CONFIGS_DIR}/MaxPower"
+echo 250 > "${CONFIGS_DIR}/MaxPower" # max power consuption 250mA
 
+#configuration string directory for US English 
 CONFIGS_STRINGS_DIR="${CONFIGS_DIR}/strings/0x409"
 mkdir -p "$CONFIGS_STRINGS_DIR"
 echo "Config ${CONFIG_INDEX}: ECM network" > "${CONFIGS_STRINGS_DIR}/configuration"
 
+# set symbolic link to hid.usb0 and enable USB gadget for the UDC (USB Device Controller)
 ln -s "$FUNCTIONS_DIR" "${CONFIGS_DIR}/"
 ls /sys/class/udc > UDC
-
+# make hidg0 writable 
 chmod 777 /dev/hidg0
