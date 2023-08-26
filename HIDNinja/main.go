@@ -36,7 +36,7 @@ func executePayload(payloadString string) bool {
 	//convert to upper case for standardized mapping
 	payloadString = strings.ToUpper(payloadString)
 
-	// TODO insert shift key scancodes for genuine uppercase
+	// TODO insert shift key scancodes for genuine uppercase representation
 
 	//TODO special treatment for modifiers needed
 
@@ -54,6 +54,6 @@ func executePayload(payloadString string) bool {
 
 func main() {
 	setupRoutes()
-	log.Println("Waiting for client ...")
+	log.Println("Waiting for client connection ...")
 	log.Fatal(http.ListenAndServe(":3000", nil))
 }
