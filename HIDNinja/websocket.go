@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// Defining the read and write buffer size for the upgrader
+// Initialize a websocket Upgrader and configure its read and write buffer size to 1024 bytes.
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
