@@ -19,9 +19,10 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "../PayloadInterface/index.html")
 }
 
-// WebSocket endpoint
+// Configure the WebSocket endpoint
 func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 
+	// check if the incoming websocket connection is allowed, currently we allow all connections.
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 
 	// upgrade the connection to a websocket
@@ -31,7 +32,7 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	log.Println("Client Connected")
+	log.Println("Client connected successfully")
 
 	reader(conn)
 }
