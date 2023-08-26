@@ -8,11 +8,13 @@ import (
 	"strings"
 )
 
+//TODO: Provide Modifier Key Handling
 // Declare a struct type for the payload handling
+/*
 type hidPayload struct {
 	Modifier   modifier
 	Character0 string
-}
+}*/
 
 func sendKey(code []byte) {
 	f, err := os.OpenFile("/dev/hidg0", os.O_APPEND|os.O_WRONLY, 0666)
