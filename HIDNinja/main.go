@@ -16,6 +16,7 @@ type hidPayload struct {
 	Character0 string
 }*/
 
+// Send the byte sequence of keystrokes to the virtual HID (keyboard) where it will be sent to the target host over USB
 func sendKey(code []byte) {
 	f, err := os.OpenFile("/dev/hidg0", os.O_APPEND|os.O_WRONLY, 0666)
 	if err != nil {
