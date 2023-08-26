@@ -32,16 +32,16 @@ func sendKey(code []byte) {
 	}
 }
 
+// The function takes a payload string and processes the individual characters, so that they can be correctly translated, processed, and sent to the target host.
 func executePayload(payloadString string) bool {
 
 	//convert to upper case for standardized mapping
 	payloadString = strings.ToUpper(payloadString)
 
 	// TODO insert shift key scancodes for genuine uppercase representation
+	// TODO special treatment for modifiers needed
 
-	//TODO special treatment for modifiers needed
-
-	//run through each character/rune in the payload string
+	//run through each character/rune in the payload string, translate it to a scancode and send it to the virtual HID
 	for _, ch := range payloadString {
 		key := translationLayer(string(ch))
 		fmt.Println(ch) // for testing purposes, remove later
