@@ -15,14 +15,14 @@ This project is based on a Linux SBC which will be mimicking an HID device and i
 
 The current implementation is very barebones, therefore, we still have an extensive list of missing features:
 
- • Payload repository and payload management (CRUD)
- • Communication support with the SBC for Bluetooth
- • Communication support with the SBC for radiofrequency (RF)
- • Dynamic USB peripheral emulation (on the fly change of device types) for the purpose of local exfiltration
- • Data receival of encoded exfiltration transfers from to Host to SBC through the USB control transfer pipeline to evade detection. 
- • Dynamic keystroke timing which mimics human input patterns as closely as possible to evade detection algorithms.
- • Customizable delays as part of the payload
- • Support for modifier keys
- • Make the scan code translation case sensitive.
- • Support for the handling and managing of multiple SBCs (swarm) from one user interface, and deployment of payloads to multiple targets at the same time.  
- • Implement relay/mesh networking over multiple SBCs to extend communication range. 
+- Payload repository and payload management (CRUD)
+- Communication support with the SBC for Bluetooth
+- Communication support with the SBC for radiofrequency (RF)
+- Dynamic USB peripheral emulation (on the fly change of device types) for the purpose of local exfiltration
+- Data receival of encoded exfiltration transfers from to Host to SBC through the USB control transfer pipeline to evade detection.
+- Dynamic keystroke timing which mimics human input patterns as closely as possible to evade detection algorithms.
+- Customizable delays as part of the payload
+- Support for modifier keys
+- Make the scan code translation case sensitive.
+- Support for the handling and managing of multiple SBCs (swarm) from one user interface, and deployment of payloads to multiple targets at the same time.
+- Implement relay/mesh networking over multiple SBCs to extend communication range. 
