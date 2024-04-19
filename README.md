@@ -2,7 +2,7 @@
 
 ## Introduction
 
-HIDNinja is Linux based wireless HID keystroke injector with a remote payload interface.
+HIDNinja is Linux based wireless HID keystroke injector with a remote payload interface. This project was inspired by COTTONMOUTH-I. 
 
 USB is a flexible protocol that provides a lot of functions and HID functionality which is trust by default on most host systems. This makes it not only versatile but also an attractive point of attack. Among the wide range of USB based attacks, even simple methods like keystroke injections represent a significant security risk.  
 
@@ -75,3 +75,10 @@ The setup script will execute the following changes on our SBC to turn it into a
     - Enable the “usb-gadget” service on boot.
     - This systemd service unit file sets up the "hidninja.service" to run the "HIDNinja" USB Gadget during system startup after the syslog service is ready. It runs with root privileges and is enabled to start when the local file systems are mounted.
 - And as a last step we reboot the system.
+
+## Sources & Credits
+- https://www.kernel.org/doc/html/latest/usb/gadget_hid.html
+- https://github.com/gsora/hid-compiler/blob/master/compiler/Scancodes.go
+- http://www.linux-usb.org/gadget/
+- https://www.usb.org/sites/default/files/hid1_11.pdf
+- https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf
