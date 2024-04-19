@@ -10,6 +10,9 @@ USB is a flexible protocol that provides a lot of functions and HID functionalit
 
 This project is based on a Linux SBC which will be mimicking an HID device and is capable of receiving payloads over an onboard [WNIC](https://https://en.wikipedia.org/wiki/Wireless_network_interface_controller). It would be also possible to adjust this project for a more compact hardware setup and alternative communication methods could be used to interface with.
 
+## Architecture
+
+![architecture](https://unit37.org/assets/img/hidninja/architecture.png)
 
 ## TODOs & Planned future enhancements
 
