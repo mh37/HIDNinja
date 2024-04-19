@@ -25,9 +25,9 @@ We can summarize the core functionality of the software side as follows:
 7. Once the “keypress” is assembled, we pass it to a function that will append the freshly constructed byte sequence to our USB gadget file /dev/hidg0. Once it is appended to the file it will be sent directly as a keystroke to the target host. 
 The relative simplicity of this design allows us to achieve a somewhat compact and efficient implementation with a conservative amount of code. In the future with added features and functionalities the quantity of code will certainly increase but we aim to avoid code bloat as much as possible. 
 
-## TODOs & Planned future enhancements
+## Backlog & Planned features
 
-The current implementation is very barebones, therefore, we still have an extensive list of missing features:
+The current implementation is very barebones, therefore, I have an extensive list of missing features:
 
 - Payload repository and payload management (CRUD)
 - Communication support with the SBC for Bluetooth
