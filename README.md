@@ -14,6 +14,17 @@ This project is based on a Linux SBC which will be mimicking an HID device and i
 
 ![architecture](https://unit37.org/assets/img/hidninja/architecture.png)
 
+We can summarize the core functionality of the software side as follows: 
+
+1. The SBC runs a Web Socket Server which sets up routes with a http.HandleFunc() so that we can provide a connection to either the web socket endpoint for payload processing or the web/payload interface. Therefore, the server listens for an incoming client connection and routes it accordingly. 
+2. If a client connection is detected and the web interface route triggered, the HTML file for the payload web interface is served in return over HTTP. 
+3. The web interface accepts user input in the form of text-based payloads, which can then be sent back to the web socket servers secondary endpoint route. We implemented a reader function which listens for incoming payloads. Once a payload string is received a status message will be returned to the client and the payload execution process triggered if no errors were reported.
+4. Once the payload execution chain is triggered on the server side, the received payload-string is dissected into individual characters and sent to a translation layer. Beware that this process is currently not case-sensitive and will need to be modified in the future to account for modifier keys and other special instructions. 
+5. The translation layer will run the individual characters through a scan code map where Strings are mapped against specific byte values. The reason why we use string values and not char values here is because we plan to communicate modifiers as multi character strings. This implementation method might be subject to change in future releases. Once the byte value has been correctly identified it will be returned to the payload execution function.
+6. With the freshly acquired information we can now assemble a keypress with the scan code byte value. A keypress consists of a byte sequence containing 8 bytes, and each keypress can contain up to six scan codes (USB Implementer’s Forum 2001, 30). It is important to remember to also release the keypress again. This can be simply done by sending an zero value byte array, such as []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}. 
+7. Once the “keypress” is assembled, we pass it to a function that will append the freshly constructed byte sequence to our USB gadget file /dev/hidg0. Once it is appended to the file it will be sent directly as a keystroke to the target host. 
+The relative simplicity of this design allows us to achieve a somewhat compact and efficient implementation with a conservative amount of code. In the future with added features and functionalities the quantity of code will certainly increase but we aim to avoid code bloat as much as possible. 
+
 ## TODOs & Planned future enhancements
 
 The current implementation is very barebones, therefore, we still have an extensive list of missing features:
