@@ -2,7 +2,7 @@
 
 ## Introduction
 
-HIDNinja is Linux based wireless HID keystroke injector with a remote payload interface. This project was inspired by COTTONMOUTH-I. 
+HIDNinja is Linux based wireless HID keystroke injector with a remote payload interface. This project was inspired by projects such as COTTONMOUTH-I, Bash Bunny, and Rubber Ducky. 
 
 USB is a flexible protocol that provides a lot of functions and HID functionality which is trust by default on most host systems. This makes it not only versatile but also an attractive point of attack. Among the wide range of USB based attacks, even simple methods like keystroke injections represent a significant security risk.  
 
