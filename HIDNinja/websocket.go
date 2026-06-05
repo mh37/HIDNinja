@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -29,7 +28,8 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println("WebSocket upgrade failed:", err)
+		return
 	}
 
 	log.Println("Client connected successfully")
@@ -39,18 +39,21 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 
 // reader function that listens for incoming payloads
 func reader(conn *websocket.Conn) {
+	defer conn.Close()
 	// keep listening for incoming payloads
 	for {
 		//read incoming payload
 		msgType, msg, err := conn.ReadMessage()
 		if err != nil {
+			log.Println("Error reading message:", err)
 			return
 		}
 
 		//print received message to console
-		fmt.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
+		log.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
 
 		if err = conn.WriteMessage(msgType, msg); err != nil {
+			log.Println("Error writing message:", err)
 			return
 		}
 

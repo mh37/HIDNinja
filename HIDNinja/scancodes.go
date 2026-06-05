@@ -189,7 +189,7 @@ func translationLayer(s string) byte {
 	if val, ok := scanCodes[s]; ok {
 		return val
 	} else {
-		log.Fatal("NOT FOUND:", s == "\n")
+		log.Printf("NOT FOUND: %q", s)
 		return 0x00
 	}
 }
