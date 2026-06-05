@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -17,19 +16,18 @@ type hidPayload struct {
 }*/
 
 // Send the byte sequence of keystrokes to the virtual HID (keyboard) where it will be sent to the target host over USB
-func sendKey(code []byte) {
+func sendKey(code []byte) error {
 	f, err := os.OpenFile("/dev/hidg0", os.O_APPEND|os.O_WRONLY, 0666)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 	defer f.Close()
 
 	_, err = f.Write(code)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
+	return nil
 }
 
 // The function takes a payload string and processes the individual characters, so that they can be correctly translated, processed, and sent to the target host.
@@ -44,10 +42,14 @@ func executePayload(payloadString string) bool {
 	//run through each character/rune in the payload string, translate it to a scancode and send it to the virtual HID
 	for _, ch := range payloadString {
 		key := translationLayer(string(ch))
-		fmt.Println(ch) // for testing purposes, remove later
-		sendKey([]byte{0x00, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00})
+
+		if err := sendKey([]byte{0x00, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
+			log.Println("Error sending key:", err)
+		}
 		// release keys
-		sendKey([]byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00})
+		if err := sendKey([]byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
+			log.Println("Error releasing key:", err)
+		}
 	}
 
 	return true
