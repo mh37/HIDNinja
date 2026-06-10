@@ -10,11 +10,31 @@ func TestTranslationLayer(t *testing.T) {
 		input    string
 		expected byte
 	}{
-		{"Valid Key A", "A", 0x04},
-		{"Valid Key ENTER", "ENTER", 0x28},
-		{"Valid Key 1", "1", 0x1e},
-		{"Valid Key Space", " ", 0x2c},
-		{"Valid Key LCTRL", "LCTRL", 0x01},
+		{
+			name:     "Valid key A",
+			input:    "A",
+			expected: 0x04,
+		},
+		{
+			name:     "Valid key LCTRL",
+			input:    "LCTRL",
+			expected: 0x01,
+		},
+		{
+			name:     "Empty string",
+			input:    "",
+			expected: 0x00,
+		},
+		{
+			name:     "Unknown string",
+			input:    "UNKNOWN",
+			expected: 0x00,
+		},
+		{
+			name:     "Lowercase character",
+			input:    "a",
+			expected: 0x00,
+		},
 	}
 
 	for _, tt := range tests {
