@@ -16,14 +16,8 @@ type hidPayload struct {
 }*/
 
 // Send the byte sequence of keystrokes to the virtual HID (keyboard) where it will be sent to the target host over USB
-func sendKey(code []byte) error {
-	f, err := os.OpenFile("/dev/hidg0", os.O_APPEND|os.O_WRONLY, 0666)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	_, err = f.Write(code)
+func sendKey(f *os.File, code []byte) error {
+	_, err := f.Write(code)
 	if err != nil {
 		return err
 	}
@@ -36,6 +30,13 @@ func executePayload(payloadString string) bool {
 	//convert to upper case for standardized mapping
 	payloadString = strings.ToUpper(payloadString)
 
+	f, err := os.OpenFile("/dev/hidg0", os.O_APPEND|os.O_WRONLY, 0666)
+	if err != nil {
+		log.Println("Error opening /dev/hidg0:", err)
+		return false
+	}
+	defer f.Close()
+
 	// TODO insert shift key scancodes for genuine uppercase representation
 	// TODO special treatment for modifiers needed
 
@@ -43,11 +44,11 @@ func executePayload(payloadString string) bool {
 	for _, ch := range payloadString {
 		key := translationLayer(string(ch))
 
-		if err := sendKey([]byte{0x00, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
+		if err := sendKey(f, []byte{0x00, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
 			log.Println("Error sending key:", err)
 		}
 		// release keys
-		if err := sendKey([]byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
+		if err := sendKey(f, []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
 			log.Println("Error releasing key:", err)
 		}
 	}
