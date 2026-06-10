@@ -84,21 +84,21 @@ let output = document.getElementById("output");
 let socket = new WebSocket("ws://raspberrypi.local:3000/echo");
 
 socket.onopen = () => {
-    output.innerHTML += "Connection established\n";
+    output.appendChild(document.createTextNode("Connection established\n"));
 };
 
 socket.onmessage = (e) => {
-    output.innerHTML += "Delivered: " + e.data + "\n";
+    output.appendChild(document.createTextNode("Delivered: " + e.data + "\n"));
 };
 
 socket.onclose = event => {
-    output.innerHTML += "Connection Closed\n";
+    output.appendChild(document.createTextNode("Connection Closed\n"));
     socket.send("Client Closed!")
 };
 
 socket.onerror = error => {
     console.log("Socket Error: ", error);
-    output.innerHTML += "Error " + error + "\n";
+    output.appendChild(document.createTextNode("Error " + error + "\n"));
 };
 
 
