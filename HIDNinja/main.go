@@ -41,7 +41,7 @@ func executePayload(payloadString string) bool {
 
 	//run through each character/rune in the payload string, translate it to a scancode and send it to the virtual HID
 	for _, ch := range payloadString {
-		key := translationLayer(string(ch))
+		key := translationLayer(ch)
 
 		if err := sendKey([]byte{0x00, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
 			log.Println("Error sending key:", err)

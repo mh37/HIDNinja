@@ -2,194 +2,194 @@ package main
 
 import "log"
 
-//scan code table is a modified version of https://github.com/gsora/hid-compiler/blob/master/compiler/Scancodes.go
-var scanCodes = map[string]byte{
-	"LCTRL":              0x01,
-	"LSHIFT":             0x02,
-	"LALT":               0x04,
-	"LMETA":              0x08,
-	"RCTRL":              0x10,
-	"RSHIFT":             0x20,
-	"RALT":               0x40,
-	"RMETA":              0x80,
-	"NONE":               0x00,
-	"ERR_OVF":            0x01,
-	"A":                  0x04,
-	"B":                  0x05,
-	"C":                  0x06,
-	"D":                  0x07,
-	"E":                  0x08,
-	"F":                  0x09,
-	"G":                  0x0a,
-	"H":                  0x0b,
-	"I":                  0x0c,
-	"J":                  0x0d,
-	"K":                  0x0e,
-	"L":                  0x0f,
-	"M":                  0x10,
-	"N":                  0x11,
-	"O":                  0x12,
-	"P":                  0x13,
-	"Q":                  0x14,
-	"R":                  0x15,
-	"S":                  0x16,
-	"T":                  0x17,
-	"U":                  0x18,
-	"V":                  0x19,
-	"W":                  0x1a,
-	"X":                  0x1b,
-	"Y":                  0x1c,
-	"Z":                  0x1d,
-	"1":                  0x1e,
-	"2":                  0x1f,
-	"3":                  0x20,
-	"4":                  0x21,
-	"5":                  0x22,
-	"6":                  0x23,
-	"7":                  0x24,
-	"8":                  0x25,
-	"9":                  0x26,
-	"0":                  0x27,
-	"ENTER":              0x28,
-	"ESC":                0x29,
-	"BACKSPACE":          0x2a,
-	"TAB":                0x2b,
-	" ":                  0x2c,
-	"MINUS":              0x2d,
-	"EQUAL":              0x2e,
-	"LEFTBRACE":          0x2f,
-	"RIGHTBRACE":         0x30,
-	"BACKSLASH":          0x31,
-	"HASHTILDE":          0x32,
-	";":                  0x33,
-	"'":                  0x34,
-	"GRAVE":              0x35,
-	",":                  0x36,
-	".":                  0x37,
-	"SLASH":              0x38,
-	"CAPSLOCK":           0x39,
-	"F1":                 0x3a,
-	"F2":                 0x3b,
-	"F3":                 0x3c,
-	"F4":                 0x3d,
-	"F5":                 0x3e,
-	"F6":                 0x3f,
-	"F7":                 0x40,
-	"F8":                 0x41,
-	"F9":                 0x42,
-	"F10":                0x43,
-	"F11":                0x44,
-	"F12":                0x45,
-	"SYSRQ":              0x46,
-	"SCROLLLOCK":         0x47,
-	"PAUSE":              0x48,
-	"INSERT":             0x49,
-	"HOME":               0x4a,
-	"PAGEUP":             0x4b,
-	"DELETE":             0x4c,
-	"END":                0x4d,
-	"PAGEDOWN":           0x4e,
-	"RIGHT":              0x4f,
-	"LEFT":               0x50,
-	"DOWN":               0x51,
-	"UP":                 0x52,
-	"NUMLOCK":            0x53,
-	"KPSLASH":            0x54,
-	"KPASTERISK":         0x55,
-	"KPMINUS":            0x56,
-	"KPPLUS":             0x57,
-	"KPENTER":            0x58,
-	"KP1":                0x59,
-	"KP2":                0x5a,
-	"KP3":                0x5b,
-	"KP4":                0x5c,
-	"KP5":                0x5d,
-	"KP6":                0x5e,
-	"KP7":                0x5f,
-	"KP8":                0x60,
-	"KP9":                0x61,
-	"KP0":                0x62,
-	"KPDOT":              0x63,
-	"102ND":              0x64,
-	"COMPOSE":            0x65,
-	"POWER":              0x66,
-	"KPEQUAL":            0x67,
-	"F13":                0x68,
-	"F14":                0x69,
-	"F15":                0x6a,
-	"F16":                0x6b,
-	"F17":                0x6c,
-	"F18":                0x6d,
-	"F19":                0x6e,
-	"F20":                0x6f,
-	"F21":                0x70,
-	"F22":                0x71,
-	"F23":                0x72,
-	"F24":                0x73,
-	"OPEN":               0x74,
-	"HELP":               0x75,
-	"PROPS":              0x76,
-	"FRONT":              0x77,
-	"STOP":               0x78,
-	"AGAIN":              0x79,
-	"UNDO":               0x7a,
-	"CUT":                0x7b,
-	"COPY":               0x7c,
-	"PASTE":              0x7d,
-	"FIND":               0x7e,
-	"MUTE":               0x7f,
-	"VOLUMEUP":           0x80,
-	"VOLUMEDOWN":         0x81,
-	"KPCOMMA":            0x85,
-	"RO":                 0x87,
-	"KATAKANAHIRAGANA":   0x88,
-	"YEN":                0x89,
-	"HENKAN":             0x8a,
-	"MUHENKAN":           0x8b,
-	"KPJPCOMMA":          0x8c,
-	"HANGEUL":            0x90,
-	"HANJA":              0x91,
-	"KATAKANA":           0x92,
-	"HIRAGANA":           0x93,
-	"ZENKAKUHANKAKU":     0x94,
-	"KPLEFTPAREN":        0xb6,
-	"KPRIGHTPAREN":       0xb7,
-	"LEFTCTRL":           0xe0,
-	"LEFTSHIFT":          0xe1,
-	"LEFTALT":            0xe2,
-	"LEFTMETA":           0xe3,
-	"RIGHTCTRL":          0xe4,
-	"RIGHTSHIFT":         0xe5,
-	"RIGHTALT":           0xe6,
-	"RIGHTMETA":          0xe7,
-	"MEDIA_PLAYPAUSE":    0xe8,
-	"MEDIA_STOPCD":       0xe9,
-	"MEDIA_PREVIOUSSONG": 0xea,
-	"MEDIA_NEXTSONG":     0xeb,
-	"MEDIA_EJECTCD":      0xec,
-	"MEDIA_VOLUMEUP":     0xed,
-	"MEDIA_VOLUMEDOWN":   0xee,
-	"MEDIA_MUTE":         0xef,
-	"MEDIA_WWW":          0xf0,
-	"MEDIA_BACK":         0xf1,
-	"MEDIA_FORWARD":      0xf2,
-	"MEDIA_STOP":         0xf3,
-	"MEDIA_FIND":         0xf4,
-	"MEDIA_SCROLLUP":     0xf5,
-	"MEDIA_SCROLLDOWN":   0xf6,
-	"MEDIA_EDIT":         0xf7,
-	"MEDIA_SLEEP":        0xf8,
-	"MEDIA_COFFEE":       0xf9,
-	"MEDIA_REFRESH":      0xfa,
-	"MEDIA_CALC":         0xfb,
+// scan code table is a modified version of https://github.com/gsora/hid-compiler/blob/master/compiler/Scancodes.go
+var scanCodes = map[rune]byte{
+	// LCTRL removed as it cannot be a single rune
+	// LSHIFT removed as it cannot be a single rune
+	// LALT removed as it cannot be a single rune
+	// LMETA removed as it cannot be a single rune
+	// RCTRL removed as it cannot be a single rune
+	// RSHIFT removed as it cannot be a single rune
+	// RALT removed as it cannot be a single rune
+	// RMETA removed as it cannot be a single rune
+	// NONE removed as it cannot be a single rune
+	// ERR_OVF removed as it cannot be a single rune
+	'A':    0x04,
+	'B':    0x05,
+	'C':    0x06,
+	'D':    0x07,
+	'E':    0x08,
+	'F':    0x09,
+	'G':    0x0a,
+	'H':    0x0b,
+	'I':    0x0c,
+	'J':    0x0d,
+	'K':    0x0e,
+	'L':    0x0f,
+	'M':    0x10,
+	'N':    0x11,
+	'O':    0x12,
+	'P':    0x13,
+	'Q':    0x14,
+	'R':    0x15,
+	'S':    0x16,
+	'T':    0x17,
+	'U':    0x18,
+	'V':    0x19,
+	'W':    0x1a,
+	'X':    0x1b,
+	'Y':    0x1c,
+	'Z':    0x1d,
+	'1':    0x1e,
+	'2':    0x1f,
+	'3':    0x20,
+	'4':    0x21,
+	'5':    0x22,
+	'6':    0x23,
+	'7':    0x24,
+	'8':    0x25,
+	'9':    0x26,
+	'0':    0x27,
+	'\n':   0x28, // ENTER
+	'\x1b': 0x29, // ESC
+	'\b':   0x2a, // BACKSPACE
+	'\t':   0x2b, // TAB
+	' ':    0x2c,
+	// MINUS removed as it cannot be a single rune
+	// EQUAL removed as it cannot be a single rune
+	// LEFTBRACE removed as it cannot be a single rune
+	// RIGHTBRACE removed as it cannot be a single rune
+	// BACKSLASH removed as it cannot be a single rune
+	// HASHTILDE removed as it cannot be a single rune
+	';':  0x33,
+	'\'': 0x34,
+	// GRAVE removed as it cannot be a single rune
+	',': 0x36,
+	'.': 0x37,
+	// SLASH removed as it cannot be a single rune
+	// CAPSLOCK removed as it cannot be a single rune
+	// F1 removed as it cannot be a single rune
+	// F2 removed as it cannot be a single rune
+	// F3 removed as it cannot be a single rune
+	// F4 removed as it cannot be a single rune
+	// F5 removed as it cannot be a single rune
+	// F6 removed as it cannot be a single rune
+	// F7 removed as it cannot be a single rune
+	// F8 removed as it cannot be a single rune
+	// F9 removed as it cannot be a single rune
+	// F10 removed as it cannot be a single rune
+	// F11 removed as it cannot be a single rune
+	// F12 removed as it cannot be a single rune
+	// SYSRQ removed as it cannot be a single rune
+	// SCROLLLOCK removed as it cannot be a single rune
+	// PAUSE removed as it cannot be a single rune
+	// INSERT removed as it cannot be a single rune
+	// HOME removed as it cannot be a single rune
+	// PAGEUP removed as it cannot be a single rune
+	// DELETE removed as it cannot be a single rune
+	// END removed as it cannot be a single rune
+	// PAGEDOWN removed as it cannot be a single rune
+	// RIGHT removed as it cannot be a single rune
+	// LEFT removed as it cannot be a single rune
+	// DOWN removed as it cannot be a single rune
+	// UP removed as it cannot be a single rune
+	// NUMLOCK removed as it cannot be a single rune
+	// KPSLASH removed as it cannot be a single rune
+	// KPASTERISK removed as it cannot be a single rune
+	// KPMINUS removed as it cannot be a single rune
+	// KPPLUS removed as it cannot be a single rune
+	// KPENTER removed as it cannot be a single rune
+	// KP1 removed as it cannot be a single rune
+	// KP2 removed as it cannot be a single rune
+	// KP3 removed as it cannot be a single rune
+	// KP4 removed as it cannot be a single rune
+	// KP5 removed as it cannot be a single rune
+	// KP6 removed as it cannot be a single rune
+	// KP7 removed as it cannot be a single rune
+	// KP8 removed as it cannot be a single rune
+	// KP9 removed as it cannot be a single rune
+	// KP0 removed as it cannot be a single rune
+	// KPDOT removed as it cannot be a single rune
+	// 102ND removed as it cannot be a single rune
+	// COMPOSE removed as it cannot be a single rune
+	// POWER removed as it cannot be a single rune
+	// KPEQUAL removed as it cannot be a single rune
+	// F13 removed as it cannot be a single rune
+	// F14 removed as it cannot be a single rune
+	// F15 removed as it cannot be a single rune
+	// F16 removed as it cannot be a single rune
+	// F17 removed as it cannot be a single rune
+	// F18 removed as it cannot be a single rune
+	// F19 removed as it cannot be a single rune
+	// F20 removed as it cannot be a single rune
+	// F21 removed as it cannot be a single rune
+	// F22 removed as it cannot be a single rune
+	// F23 removed as it cannot be a single rune
+	// F24 removed as it cannot be a single rune
+	// OPEN removed as it cannot be a single rune
+	// HELP removed as it cannot be a single rune
+	// PROPS removed as it cannot be a single rune
+	// FRONT removed as it cannot be a single rune
+	// STOP removed as it cannot be a single rune
+	// AGAIN removed as it cannot be a single rune
+	// UNDO removed as it cannot be a single rune
+	// CUT removed as it cannot be a single rune
+	// COPY removed as it cannot be a single rune
+	// PASTE removed as it cannot be a single rune
+	// FIND removed as it cannot be a single rune
+	// MUTE removed as it cannot be a single rune
+	// VOLUMEUP removed as it cannot be a single rune
+	// VOLUMEDOWN removed as it cannot be a single rune
+	// KPCOMMA removed as it cannot be a single rune
+	// RO removed as it cannot be a single rune
+	// KATAKANAHIRAGANA removed as it cannot be a single rune
+	// YEN removed as it cannot be a single rune
+	// HENKAN removed as it cannot be a single rune
+	// MUHENKAN removed as it cannot be a single rune
+	// KPJPCOMMA removed as it cannot be a single rune
+	// HANGEUL removed as it cannot be a single rune
+	// HANJA removed as it cannot be a single rune
+	// KATAKANA removed as it cannot be a single rune
+	// HIRAGANA removed as it cannot be a single rune
+	// ZENKAKUHANKAKU removed as it cannot be a single rune
+	// KPLEFTPAREN removed as it cannot be a single rune
+	// KPRIGHTPAREN removed as it cannot be a single rune
+	// LEFTCTRL removed as it cannot be a single rune
+	// LEFTSHIFT removed as it cannot be a single rune
+	// LEFTALT removed as it cannot be a single rune
+	// LEFTMETA removed as it cannot be a single rune
+	// RIGHTCTRL removed as it cannot be a single rune
+	// RIGHTSHIFT removed as it cannot be a single rune
+	// RIGHTALT removed as it cannot be a single rune
+	// RIGHTMETA removed as it cannot be a single rune
+	// MEDIA_PLAYPAUSE removed as it cannot be a single rune
+	// MEDIA_STOPCD removed as it cannot be a single rune
+	// MEDIA_PREVIOUSSONG removed as it cannot be a single rune
+	// MEDIA_NEXTSONG removed as it cannot be a single rune
+	// MEDIA_EJECTCD removed as it cannot be a single rune
+	// MEDIA_VOLUMEUP removed as it cannot be a single rune
+	// MEDIA_VOLUMEDOWN removed as it cannot be a single rune
+	// MEDIA_MUTE removed as it cannot be a single rune
+	// MEDIA_WWW removed as it cannot be a single rune
+	// MEDIA_BACK removed as it cannot be a single rune
+	// MEDIA_FORWARD removed as it cannot be a single rune
+	// MEDIA_STOP removed as it cannot be a single rune
+	// MEDIA_FIND removed as it cannot be a single rune
+	// MEDIA_SCROLLUP removed as it cannot be a single rune
+	// MEDIA_SCROLLDOWN removed as it cannot be a single rune
+	// MEDIA_EDIT removed as it cannot be a single rune
+	// MEDIA_SLEEP removed as it cannot be a single rune
+	// MEDIA_COFFEE removed as it cannot be a single rune
+	// MEDIA_REFRESH removed as it cannot be a single rune
+	// MEDIA_CALC removed as it cannot be a single rune
 }
 
 // Translates char/key into HID compatible code
-func translationLayer(s string) byte {
+func translationLayer(s rune) byte {
 	if val, ok := scanCodes[s]; ok {
 		return val
 	} else {
-		log.Printf("NOT FOUND: %q", s)
+		log.Printf("NOT FOUND: %q", string(s))
 		return 0x00
 	}
 }
