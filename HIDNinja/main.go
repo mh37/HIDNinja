@@ -8,12 +8,6 @@ import (
 )
 
 //TODO: Provide Modifier Key Handling
-// Declare a struct type for the payload handling
-/*
-type hidPayload struct {
-	Modifier   modifier
-	Character0 string
-}*/
 
 // Send the byte sequence of keystrokes to the virtual HID (keyboard) where it will be sent to the target host over USB
 func sendKey(code []byte) error {
