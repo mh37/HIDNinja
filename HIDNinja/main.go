@@ -5,15 +5,10 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"unicode"
 )
 
 //TODO: Provide Modifier Key Handling
-// Declare a struct type for the payload handling
-/*
-type hidPayload struct {
-	Modifier   modifier
-	Character0 string
-}*/
 
 // Send the byte sequence of keystrokes to the virtual HID (keyboard) where it will be sent to the target host over USB
 func sendKey(f *os.File, code []byte) error {
@@ -42,7 +37,14 @@ func executePayload(payloadString string) bool {
 
 	//run through each character/rune in the payload string, translate it to a scancode and send it to the virtual HID
 	for _, ch := range payloadString {
-		key := translationLayer(string(ch))
+		modifier := byte(0x00)
+		if unicode.IsUpper(ch) {
+			modifier = 0x02 // LSHIFT
+		}
+
+		//convert to upper case for standardized mapping
+		upperChar := strings.ToUpper(string(ch))
+		key := translationLayer(upperChar)
 
 		if err := sendKey(f, []byte{0x00, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
 			log.Println("Error sending key:", err)
