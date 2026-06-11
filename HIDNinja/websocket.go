@@ -21,9 +21,6 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 // Configure the WebSocket endpoint
 func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 
-	// check if the incoming websocket connection is allowed, currently we allow all connections.
-	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
-
 	// upgrade the connection to a websocket
 	conn, err := upgrader.Upgrade(w, r, nil)
 
