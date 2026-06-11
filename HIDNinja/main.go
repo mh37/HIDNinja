@@ -37,14 +37,7 @@ func executePayload(payloadString string) bool {
 
 	//run through each character/rune in the payload string, translate it to a scancode and send it to the virtual HID
 	for _, ch := range payloadString {
-		modifier := byte(0x00)
-		if unicode.IsUpper(ch) {
-			modifier = 0x02 // LSHIFT
-		}
-
-		//convert to upper case for standardized mapping
-		upperChar := strings.ToUpper(string(ch))
-		key := translationLayer(upperChar)
+		key := translationLayer(ch)
 
 		if err := sendKey(f, []byte{0x00, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
 			log.Println("Error sending key:", err)
