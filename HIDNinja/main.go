@@ -5,25 +5,14 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"unicode"
 )
 
 //TODO: Provide Modifier Key Handling
-// Declare a struct type for the payload handling
-/*
-type hidPayload struct {
-	Modifier   modifier
-	Character0 string
-}*/
 
 // Send the byte sequence of keystrokes to the virtual HID (keyboard) where it will be sent to the target host over USB
-func sendKey(code []byte) error {
-	f, err := os.OpenFile("/dev/hidg0", os.O_APPEND|os.O_WRONLY, 0666)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	_, err = f.Write(code)
+func sendKey(f *os.File, code []byte) error {
+	_, err := f.Write(code)
 	if err != nil {
 		return err
 	}
@@ -99,7 +88,7 @@ func executePayload(payloadString string) bool {
 			log.Println("Error sending key:", err)
 		}
 		// release keys
-		if err := sendKey([]byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
+		if err := sendKey(f, []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
 			log.Println("Error releasing key:", err)
 		}
 	}
