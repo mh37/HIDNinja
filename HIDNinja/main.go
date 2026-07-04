@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"unicode"
 )
 
@@ -19,72 +18,72 @@ func sendKey(f *os.File, code []byte) error {
 	return nil
 }
 
-// charToKeystroke takes a rune and returns the required modifier byte and string mapping for translation
-func charToKeystroke(ch rune) (byte, string) {
+// charToKeystroke takes a rune and returns the required modifier byte and rune mapping for translation
+func charToKeystroke(ch rune) (byte, rune) {
 	var modifier byte = 0x00
-	var keyStr string
+	var keyRune rune
 
 	switch {
 	case ch >= 'A' && ch <= 'Z':
 		modifier = 0x02 // LSHIFT
-		keyStr = string(ch)
+		keyRune = ch
 	case ch >= 'a' && ch <= 'z':
-		keyStr = strings.ToUpper(string(ch))
+		keyRune = unicode.ToUpper(ch)
 	case ch >= '0' && ch <= '9':
-		keyStr = string(ch)
+		keyRune = ch
 	default:
 		switch ch {
-		case '!': modifier = 0x02; keyStr = "1"
-		case '@': modifier = 0x02; keyStr = "2"
-		case '#': modifier = 0x02; keyStr = "3"
-		case '$': modifier = 0x02; keyStr = "4"
-		case '%': modifier = 0x02; keyStr = "5"
-		case '^': modifier = 0x02; keyStr = "6"
-		case '&': modifier = 0x02; keyStr = "7"
-		case '*': modifier = 0x02; keyStr = "8"
-		case '(': modifier = 0x02; keyStr = "9"
-		case ')': modifier = 0x02; keyStr = "0"
-		case '-': keyStr = "MINUS"
-		case '_': modifier = 0x02; keyStr = "MINUS"
-		case '=': keyStr = "EQUAL"
-		case '+': modifier = 0x02; keyStr = "EQUAL"
-		case '[': keyStr = "LEFTBRACE"
-		case '{': modifier = 0x02; keyStr = "LEFTBRACE"
-		case ']': keyStr = "RIGHTBRACE"
-		case '}': modifier = 0x02; keyStr = "RIGHTBRACE"
-		case '\\': keyStr = "BACKSLASH"
-		case '|': modifier = 0x02; keyStr = "BACKSLASH"
-		case ';': keyStr = ";"
-		case ':': modifier = 0x02; keyStr = ";"
-		case '\'': keyStr = "'"
-		case '"': modifier = 0x02; keyStr = "'"
-		case '`': keyStr = "GRAVE"
-		case '~': modifier = 0x02; keyStr = "GRAVE"
-		case ',': keyStr = ","
-		case '<': modifier = 0x02; keyStr = ","
-		case '.': keyStr = "."
-		case '>': modifier = 0x02; keyStr = "."
-		case '/': keyStr = "SLASH"
-		case '?': modifier = 0x02; keyStr = "SLASH"
-		case ' ': keyStr = " "
-		case '\n': keyStr = "ENTER"
-		case '\t': keyStr = "TAB"
+		case '!': modifier = 0x02; keyRune = '1'
+		case '@': modifier = 0x02; keyRune = '2'
+		case '#': modifier = 0x02; keyRune = '3'
+		case '$': modifier = 0x02; keyRune = '4'
+		case '%': modifier = 0x02; keyRune = '5'
+		case '^': modifier = 0x02; keyRune = '6'
+		case '&': modifier = 0x02; keyRune = '7'
+		case '*': modifier = 0x02; keyRune = '8'
+		case '(': modifier = 0x02; keyRune = '9'
+		case ')': modifier = 0x02; keyRune = '0'
+		case '-': keyRune = '-'
+		case '_': modifier = 0x02; keyRune = '-'
+		case '=': keyRune = '='
+		case '+': modifier = 0x02; keyRune = '='
+		case '[': keyRune = '['
+		case '{': modifier = 0x02; keyRune = '['
+		case ']': keyRune = ']'
+		case '}': modifier = 0x02; keyRune = ']'
+		case '\\': keyRune = '\\'
+		case '|': modifier = 0x02; keyRune = '\\'
+		case ';': keyRune = ';'
+		case ':': modifier = 0x02; keyRune = ';'
+		case '\'': keyRune = '\''
+		case '"': modifier = 0x02; keyRune = '\''
+		case '`': keyRune = '`'
+		case '~': modifier = 0x02; keyRune = '`'
+		case ',': keyRune = ','
+		case '<': modifier = 0x02; keyRune = ','
+		case '.': keyRune = '.'
+		case '>': modifier = 0x02; keyRune = '.'
+		case '/': keyRune = '/'
+		case '?': modifier = 0x02; keyRune = '/'
+		case ' ': keyRune = ' '
+		case '\n': keyRune = '\n'
+		case '\t': keyRune = '\t'
 		default:
-			keyStr = string(ch) // Fallback
+			keyRune = ch // Fallback
 		}
 	}
-	return modifier, keyStr
+	return modifier, keyRune
 }
 
 // The function takes a payload string and processes the individual characters, so that they can be correctly translated, processed, and sent to the target host.
-func executePayload(payloadString string) bool {
+func executePayload(f *os.File, payloadString string) bool {
 
 	//run through each character/rune in the payload string, translate it to a scancode and send it to the virtual HID
 	for _, ch := range payloadString {
-		modifier, keyStr := charToKeystroke(ch)
-		key := translationLayer(keyStr)
+		modifier, keyRune := charToKeystroke(ch)
+		key := translationLayer(keyRune)
 
-		if err := sendKey([]byte{modifier, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
+		if err := sendKey(f, []byte{modifier, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
 			log.Println("Error sending key:", err)
 		}
 		// release keys

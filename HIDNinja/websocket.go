@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/websocket"
 )
@@ -37,6 +38,15 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 // reader function that listens for incoming payloads
 func reader(conn *websocket.Conn) {
 	defer conn.Close()
+
+	// Open the virtual HID gadget device
+	f, err := os.OpenFile("/dev/hidg0", os.O_APPEND|os.O_WRONLY, 0600)
+	if err != nil {
+		log.Println("Error opening device:", err)
+		return
+	}
+	defer f.Close()
+
 	// keep listening for incoming payloads
 	for {
 		//read incoming payload
@@ -55,7 +65,7 @@ func reader(conn *websocket.Conn) {
 		}
 
 		//execute payload
-		executePayload(string(msg))
+		executePayload(f, string(msg))
 	}
 }
 
