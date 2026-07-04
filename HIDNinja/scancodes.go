@@ -55,18 +55,18 @@ var scanCodes = map[rune]byte{
 	'\b':   0x2a, // BACKSPACE
 	'\t':   0x2b, // TAB
 	' ':    0x2c,
-	// MINUS removed as it cannot be a single rune
-	// EQUAL removed as it cannot be a single rune
-	// LEFTBRACE removed as it cannot be a single rune
-	// RIGHTBRACE removed as it cannot be a single rune
-	// BACKSLASH removed as it cannot be a single rune
+	'-':    0x2d, // MINUS
+	'=':    0x2e, // EQUAL
+	'[':    0x2f, // LEFTBRACE
+	']':    0x30, // RIGHTBRACE
+	'\\':   0x31, // BACKSLASH
 	// HASHTILDE removed as it cannot be a single rune
 	';':  0x33,
 	'\'': 0x34,
-	// GRAVE removed as it cannot be a single rune
+	'`':  0x35, // GRAVE
 	',': 0x36,
 	'.': 0x37,
-	// SLASH removed as it cannot be a single rune
+	'/': 0x38, // SLASH
 	// CAPSLOCK removed as it cannot be a single rune
 	// F1 removed as it cannot be a single rune
 	// F2 removed as it cannot be a single rune
