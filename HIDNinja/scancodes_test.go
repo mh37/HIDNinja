@@ -7,32 +7,27 @@ import (
 func TestTranslationLayer(t *testing.T) {
 	tests := []struct {
 		name     string
-		input    string
+		input    rune
 		expected byte
 	}{
 		{
 			name:     "Valid key A",
-			input:    "A",
+			input:    'A',
 			expected: 0x04,
 		},
 		{
-			name:     "Valid key LCTRL",
-			input:    "LCTRL",
-			expected: 0x01,
-		},
-		{
-			name:     "Empty string",
-			input:    "",
+			name:     "Zero rune",
+			input:    0,
 			expected: 0x00,
 		},
 		{
-			name:     "Unknown string",
-			input:    "UNKNOWN",
+			name:     "Unknown rune",
+			input:    '?',
 			expected: 0x00,
 		},
 		{
 			name:     "Lowercase character",
-			input:    "a",
+			input:    'a',
 			expected: 0x00,
 		},
 	}
