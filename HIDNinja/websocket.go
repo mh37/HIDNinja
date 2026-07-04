@@ -47,7 +47,7 @@ func reader(conn *websocket.Conn) {
 		}
 
 		//print received message to console
-		log.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
+		log.Printf("%q sent: %q\n", conn.RemoteAddr().String(), string(msg))
 
 		if err = conn.WriteMessage(msgType, msg); err != nil {
 			log.Println("Error writing message:", err)
