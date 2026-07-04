@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"unicode"
 )
 
 //TODO: Provide Modifier Key Handling
@@ -78,13 +77,25 @@ func charToKeystroke(ch rune) (byte, string) {
 
 // The function takes a payload string and processes the individual characters, so that they can be correctly translated, processed, and sent to the target host.
 func executePayload(payloadString string) bool {
+	f, err := os.OpenFile("/dev/hidg0", os.O_APPEND|os.O_WRONLY, 0600)
+	if err != nil {
+		log.Println("Failed to open HID device:", err)
+		return false
+	}
+	defer f.Close()
 
 	//run through each character/rune in the payload string, translate it to a scancode and send it to the virtual HID
 	for _, ch := range payloadString {
 		modifier, keyStr := charToKeystroke(ch)
-		key := translationLayer(keyStr)
 
-		if err := sendKey([]byte{modifier, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
+		var runeKey rune
+		if len(keyStr) > 0 {
+			runeKey = rune(keyStr[0])
+		}
+
+		key := translationLayer(runeKey)
+
+		if err := sendKey(f, []byte{modifier, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
 			log.Println("Error sending key:", err)
 		}
 		// release keys
