@@ -16,18 +16,13 @@ func TestTranslationLayer(t *testing.T) {
 			expected: 0x04,
 		},
 		{
-			name:     "Valid key LCTRL",
-			input:    "LCTRL",
-			expected: 0x01,
-		},
-		{
 			name:     "Empty string",
 			input:    "",
 			expected: 0x00,
 		},
 		{
-			name:     "Unknown string",
-			input:    "UNKNOWN",
+			name:     "Unknown character",
+			input:    "?",
 			expected: 0x00,
 		},
 		{
@@ -39,7 +34,11 @@ func TestTranslationLayer(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := translationLayer(tt.input)
+			var runeInput rune
+			if len(tt.input) > 0 {
+				runeInput = rune(tt.input[0])
+			}
+			result := translationLayer(runeInput)
 			if result != tt.expected {
 				t.Errorf("translationLayer(%q) = 0x%02x; want 0x%02x", tt.input, result, tt.expected)
 			}
