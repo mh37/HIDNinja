@@ -58,6 +58,7 @@ func TestCharToKeystroke(t *testing.T) {
 		{';', 0x00, ";"},
 		{':', 0x02, ";"},
 		{'?', 0x02, "SLASH"},
+		{'©', 0x00, "©"}, // Fallback case
 	}
 
 	for _, tt := range tests {
