@@ -14,7 +14,7 @@ func TestHomePage(t *testing.T) {
 	}
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(homePage)
+	handler := http.FileServer(http.Dir("../PayloadInterface"))
 
 	handler.ServeHTTP(rr, req)
 

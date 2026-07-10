@@ -25,11 +25,6 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-// Serve the index.html for the payload web interface
-func homePage(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "../PayloadInterface/index.html")
-}
-
 // Configure the WebSocket endpoint
 func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 
@@ -74,5 +69,6 @@ func reader(conn *websocket.Conn) {
 // Defines the routes, such as the WebSocket Endpoint and Homepage
 func setupRoutes() {
 	http.HandleFunc("/echo", wsEndpoint)
-	http.HandleFunc("/", homePage)
+	fs := http.FileServer(http.Dir("../PayloadInterface"))
+	http.Handle("/", fs)
 }
