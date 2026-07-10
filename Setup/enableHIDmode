@@ -55,6 +55,6 @@ echo "Config ${CONFIG_INDEX}: ECM network" > "${CONFIGS_STRINGS_DIR}/configurati
 ln -s "$FUNCTIONS_DIR" "${CONFIGS_DIR}/"
 ls /sys/class/udc > UDC
 # make hidg0 writable and manage group ownership
-HID_GROUP=${HID_GROUP:-root}
+HID_GROUP=${HID_GROUP:-input}
 chown root:"$HID_GROUP" /dev/hidg0
 chmod 660 /dev/hidg0

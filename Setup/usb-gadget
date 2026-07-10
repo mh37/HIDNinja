@@ -7,6 +7,7 @@ After=syslog.target
 [Service]
 Type=oneshot
 User=root
+Group=input
 ExecStart=/usr/bin/hidninja
  
 [Install]
