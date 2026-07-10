@@ -6,16 +6,16 @@ const output = dom.window.document.getElementById("output");
 
 const ITERATIONS = 1000;
 
-// Benchmark innerHTML +=
+// Benchmark textContent +=
 let start = performance.now();
 for (let i = 0; i < ITERATIONS; i++) {
-    output.innerHTML += "Message " + i + "\n";
+    output.textContent += "Message " + i + "\n";
 }
 let end = performance.now();
-const timeInnerHTML = end - start;
+const timeTextContent = end - start;
 
 // Reset
-output.innerHTML = "";
+output.textContent = "";
 
 // Benchmark appendChild
 start = performance.now();
@@ -25,6 +25,6 @@ for (let i = 0; i < ITERATIONS; i++) {
 end = performance.now();
 const timeAppendChild = end - start;
 
-console.log(`innerHTML += time: ${timeInnerHTML.toFixed(2)} ms`);
+console.log(`textContent += time: ${timeTextContent.toFixed(2)} ms`);
 console.log(`appendChild time: ${timeAppendChild.toFixed(2)} ms`);
-console.log(`Improvement: ${(timeInnerHTML / timeAppendChild).toFixed(2)}x faster`);
+console.log(`Improvement: ${(timeTextContent / timeAppendChild).toFixed(2)}x faster`);
