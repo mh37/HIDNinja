@@ -75,15 +75,8 @@ func charToKeystroke(ch rune) (byte, string) {
 	return modifier, keyStr
 }
 
-// The function takes a payload string and processes the individual characters, so that they can be correctly translated, processed, and sent to the target host.
-func executePayload(payloadString string) bool {
-	f, err := os.OpenFile("/dev/hidg0", os.O_APPEND|os.O_WRONLY, 0600)
-	if err != nil {
-		log.Println("Failed to open HID device:", err)
-		return false
-	}
-	defer f.Close()
-
+// executePayloadWithFile processes a payload string and writes it to the provided file descriptor.
+func executePayloadWithFile(f *os.File, payloadString string) bool {
 	//run through each character/rune in the payload string, translate it to a scancode and send it to the virtual HID
 	for _, ch := range payloadString {
 		modifier, keyStr := charToKeystroke(ch)
@@ -105,6 +98,18 @@ func executePayload(payloadString string) bool {
 	}
 
 	return true
+}
+
+// The function takes a payload string and processes the individual characters, so that they can be correctly translated, processed, and sent to the target host.
+func executePayload(payloadString string) bool {
+	f, err := os.OpenFile("/dev/hidg0", os.O_APPEND|os.O_WRONLY, 0600)
+	if err != nil {
+		log.Println("Failed to open HID device:", err)
+		return false
+	}
+	defer f.Close()
+
+	return executePayloadWithFile(f, payloadString)
 }
 
 func main() {
