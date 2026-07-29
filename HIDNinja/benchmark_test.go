@@ -5,7 +5,7 @@ import (
 )
 
 func BenchmarkTranslationLayer(b *testing.B) {
-	payload := "HELLO WORLD THIS IS A TEST PAYLOAD TO CHECK PERFORMANCE"
+	payload := "hello world this is a test payload to check performance with lowercase letters 0123456789!@#$"
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		for _, ch := range payload {
