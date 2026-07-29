@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 )
 
 //TODO: Provide Modifier Key Handling
@@ -28,7 +27,7 @@ func charToKeystroke(ch rune) (byte, string) {
 		modifier = 0x02 // LSHIFT
 		keyStr = string(ch)
 	case ch >= 'a' && ch <= 'z':
-		keyStr = strings.ToUpper(string(ch))
+		keyStr = string(ch - 32)
 	case ch >= '0' && ch <= '9':
 		keyStr = string(ch)
 	default:
