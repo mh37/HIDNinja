@@ -113,6 +113,17 @@ func executePayload(payloadString string) bool {
 
 func main() {
 	setupRoutes()
+
+	certFile := "server.crt"
+	keyFile := "server.key"
+
+	if _, err := os.Stat(certFile); os.IsNotExist(err) {
+		log.Println("Generating self-signed certificate...")
+		if err := generateCert(certFile, keyFile); err != nil {
+			log.Fatalf("Failed to generate certificate: %v", err)
+		}
+	}
+
 	log.Println("Waiting for client connection ...")
-	log.Fatal(http.ListenAndServe(":3000", nil))
+	log.Fatal(http.ListenAndServeTLS(":3000", certFile, keyFile, nil))
 }
