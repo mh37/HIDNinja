@@ -76,6 +76,9 @@ func charToKeystroke(ch rune) (byte, string) {
 
 // executePayloadWithFile processes a payload string and writes it to the provided file descriptor.
 func executePayloadWithFile(f *os.File, payloadString string) bool {
+	payloadBuf := make([]byte, 8)
+	releaseBuf := make([]byte, 8)
+
 	//run through each character/rune in the payload string, translate it to a scancode and send it to the virtual HID
 	for _, ch := range payloadString {
 		modifier, keyStr := charToKeystroke(ch)
@@ -87,11 +90,14 @@ func executePayloadWithFile(f *os.File, payloadString string) bool {
 
 		key := translationLayer(runeKey)
 
-		if err := sendKey(f, []byte{modifier, 0x00, key, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
+		payloadBuf[0] = modifier
+		payloadBuf[2] = key
+
+		if err := sendKey(f, payloadBuf); err != nil {
 			log.Println("Error sending key:", err)
 		}
 		// release keys
-		if err := sendKey(f, []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}); err != nil {
+		if err := sendKey(f, releaseBuf); err != nil {
 			log.Println("Error releasing key:", err)
 		}
 	}
