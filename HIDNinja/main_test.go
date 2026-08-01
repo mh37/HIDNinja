@@ -47,21 +47,21 @@ func TestCharToKeystroke(t *testing.T) {
 		expectedMod byte
 		expectedKey string
 	}{
-		{'A', 0x02, "A"},
-		{'a', 0x00, "A"},
-		{'1', 0x00, "1"},
-		{'!', 0x02, "1"},
-		{'-', 0x00, "MINUS"},
-		{'_', 0x02, "MINUS"},
-		{'\n', 0x00, "ENTER"},
-		{',', 0x00, ","},
-		{'<', 0x02, ","},
-		{'>', 0x02, "."},
-		{' ', 0x00, " "},
-		{';', 0x00, ";"},
-		{':', 0x02, ";"},
-		{'?', 0x02, "SLASH"},
-		{'©', 0x00, "©"}, // Fallback case
+		{'A', ModLeftShift, "A"},
+		{'a', ModNone, "A"},
+		{'1', ModNone, "1"},
+		{'!', ModLeftShift, "1"},
+		{'-', ModNone, "MINUS"},
+		{'_', ModLeftShift, "MINUS"},
+		{'\n', ModNone, "ENTER"},
+		{',', ModNone, ","},
+		{'<', ModLeftShift, ","},
+		{'>', ModLeftShift, "."},
+		{' ', ModNone, " "},
+		{';', ModNone, ";"},
+		{':', ModLeftShift, ";"},
+		{'?', ModLeftShift, "SLASH"},
+		{'©', ModNone, "©"}, // Fallback case
 	}
 
 	for _, tt := range tests {

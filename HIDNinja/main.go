@@ -6,7 +6,17 @@ import (
 	"os"
 )
 
-//TODO: Provide Modifier Key Handling
+const (
+	ModNone       byte = 0x00
+	ModLeftCtrl   byte = 0x01
+	ModLeftShift  byte = 0x02
+	ModLeftAlt    byte = 0x04
+	ModLeftGUI    byte = 0x08
+	ModRightCtrl  byte = 0x10
+	ModRightShift byte = 0x20
+	ModRightAlt   byte = 0x40
+	ModRightGUI   byte = 0x80
+)
 
 // Send the byte sequence of keystrokes to the virtual HID (keyboard) where it will be sent to the target host over USB
 func sendKey(f *os.File, code []byte) error {
@@ -19,12 +29,12 @@ func sendKey(f *os.File, code []byte) error {
 
 // charToKeystroke takes a rune and returns the required modifier byte and string mapping for translation
 func charToKeystroke(ch rune) (byte, string) {
-	var modifier byte = 0x00
+	var modifier byte = ModNone
 	var keyStr string
 
 	switch {
 	case ch >= 'A' && ch <= 'Z':
-		modifier = 0x02 // LSHIFT
+		modifier = ModLeftShift // LSHIFT
 		keyStr = string(ch)
 	case ch >= 'a' && ch <= 'z':
 		keyStr = string(ch - 32)
@@ -32,38 +42,38 @@ func charToKeystroke(ch rune) (byte, string) {
 		keyStr = string(ch)
 	default:
 		switch ch {
-		case '!': modifier = 0x02; keyStr = "1"
-		case '@': modifier = 0x02; keyStr = "2"
-		case '#': modifier = 0x02; keyStr = "3"
-		case '$': modifier = 0x02; keyStr = "4"
-		case '%': modifier = 0x02; keyStr = "5"
-		case '^': modifier = 0x02; keyStr = "6"
-		case '&': modifier = 0x02; keyStr = "7"
-		case '*': modifier = 0x02; keyStr = "8"
-		case '(': modifier = 0x02; keyStr = "9"
-		case ')': modifier = 0x02; keyStr = "0"
+		case '!': modifier = ModLeftShift; keyStr = "1"
+		case '@': modifier = ModLeftShift; keyStr = "2"
+		case '#': modifier = ModLeftShift; keyStr = "3"
+		case '$': modifier = ModLeftShift; keyStr = "4"
+		case '%': modifier = ModLeftShift; keyStr = "5"
+		case '^': modifier = ModLeftShift; keyStr = "6"
+		case '&': modifier = ModLeftShift; keyStr = "7"
+		case '*': modifier = ModLeftShift; keyStr = "8"
+		case '(': modifier = ModLeftShift; keyStr = "9"
+		case ')': modifier = ModLeftShift; keyStr = "0"
 		case '-': keyStr = "MINUS"
-		case '_': modifier = 0x02; keyStr = "MINUS"
+		case '_': modifier = ModLeftShift; keyStr = "MINUS"
 		case '=': keyStr = "EQUAL"
-		case '+': modifier = 0x02; keyStr = "EQUAL"
+		case '+': modifier = ModLeftShift; keyStr = "EQUAL"
 		case '[': keyStr = "LEFTBRACE"
-		case '{': modifier = 0x02; keyStr = "LEFTBRACE"
+		case '{': modifier = ModLeftShift; keyStr = "LEFTBRACE"
 		case ']': keyStr = "RIGHTBRACE"
-		case '}': modifier = 0x02; keyStr = "RIGHTBRACE"
+		case '}': modifier = ModLeftShift; keyStr = "RIGHTBRACE"
 		case '\\': keyStr = "BACKSLASH"
-		case '|': modifier = 0x02; keyStr = "BACKSLASH"
+		case '|': modifier = ModLeftShift; keyStr = "BACKSLASH"
 		case ';': keyStr = ";"
-		case ':': modifier = 0x02; keyStr = ";"
+		case ':': modifier = ModLeftShift; keyStr = ";"
 		case '\'': keyStr = "'"
-		case '"': modifier = 0x02; keyStr = "'"
+		case '"': modifier = ModLeftShift; keyStr = "'"
 		case '`': keyStr = "GRAVE"
-		case '~': modifier = 0x02; keyStr = "GRAVE"
+		case '~': modifier = ModLeftShift; keyStr = "GRAVE"
 		case ',': keyStr = ","
-		case '<': modifier = 0x02; keyStr = ","
+		case '<': modifier = ModLeftShift; keyStr = ","
 		case '.': keyStr = "."
-		case '>': modifier = 0x02; keyStr = "."
+		case '>': modifier = ModLeftShift; keyStr = "."
 		case '/': keyStr = "SLASH"
-		case '?': modifier = 0x02; keyStr = "SLASH"
+		case '?': modifier = ModLeftShift; keyStr = "SLASH"
 		case ' ': keyStr = " "
 		case '\n': keyStr = "ENTER"
 		case '\t': keyStr = "TAB"
