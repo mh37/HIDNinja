@@ -28,6 +28,49 @@ func sendKey(f *os.File, code []byte) error {
 }
 
 // charToKeystroke takes a rune and returns the required modifier byte and string mapping for translation
+type keystroke struct {
+	modifier byte
+	keyStr   string
+}
+
+var symbolMap = map[rune]keystroke{
+	'!':  {ModLeftShift, "1"},
+	'@':  {ModLeftShift, "2"},
+	'#':  {ModLeftShift, "3"},
+	'$':  {ModLeftShift, "4"},
+	'%':  {ModLeftShift, "5"},
+	'^':  {ModLeftShift, "6"},
+	'&':  {ModLeftShift, "7"},
+	'*':  {ModLeftShift, "8"},
+	'(':  {ModLeftShift, "9"},
+	')':  {ModLeftShift, "0"},
+	'-':  {ModNone, "MINUS"},
+	'_':  {ModLeftShift, "MINUS"},
+	'=':  {ModNone, "EQUAL"},
+	'+':  {ModLeftShift, "EQUAL"},
+	'[':  {ModNone, "LEFTBRACE"},
+	'{':  {ModLeftShift, "LEFTBRACE"},
+	']':  {ModNone, "RIGHTBRACE"},
+	'}':  {ModLeftShift, "RIGHTBRACE"},
+	'\\': {ModNone, "BACKSLASH"},
+	'|':  {ModLeftShift, "BACKSLASH"},
+	';':  {ModNone, ";"},
+	':':  {ModLeftShift, ";"},
+	'\'': {ModNone, "'"},
+	'"':  {ModLeftShift, "'"},
+	'`':  {ModNone, "GRAVE"},
+	'~':  {ModLeftShift, "GRAVE"},
+	',':  {ModNone, ","},
+	'<':  {ModLeftShift, ","},
+	'.':  {ModNone, "."},
+	'>':  {ModLeftShift, "."},
+	'/':  {ModNone, "SLASH"},
+	'?':  {ModLeftShift, "SLASH"},
+	' ':  {ModNone, " "},
+	'\n': {ModNone, "ENTER"},
+	'\t': {ModNone, "TAB"},
+}
+
 func charToKeystroke(ch rune) (byte, string) {
 	var modifier byte = ModNone
 	var keyStr string
@@ -41,43 +84,10 @@ func charToKeystroke(ch rune) (byte, string) {
 	case ch >= '0' && ch <= '9':
 		keyStr = string(ch)
 	default:
-		switch ch {
-		case '!': modifier = ModLeftShift; keyStr = "1"
-		case '@': modifier = ModLeftShift; keyStr = "2"
-		case '#': modifier = ModLeftShift; keyStr = "3"
-		case '$': modifier = ModLeftShift; keyStr = "4"
-		case '%': modifier = ModLeftShift; keyStr = "5"
-		case '^': modifier = ModLeftShift; keyStr = "6"
-		case '&': modifier = ModLeftShift; keyStr = "7"
-		case '*': modifier = ModLeftShift; keyStr = "8"
-		case '(': modifier = ModLeftShift; keyStr = "9"
-		case ')': modifier = ModLeftShift; keyStr = "0"
-		case '-': keyStr = "MINUS"
-		case '_': modifier = ModLeftShift; keyStr = "MINUS"
-		case '=': keyStr = "EQUAL"
-		case '+': modifier = ModLeftShift; keyStr = "EQUAL"
-		case '[': keyStr = "LEFTBRACE"
-		case '{': modifier = ModLeftShift; keyStr = "LEFTBRACE"
-		case ']': keyStr = "RIGHTBRACE"
-		case '}': modifier = ModLeftShift; keyStr = "RIGHTBRACE"
-		case '\\': keyStr = "BACKSLASH"
-		case '|': modifier = ModLeftShift; keyStr = "BACKSLASH"
-		case ';': keyStr = ";"
-		case ':': modifier = ModLeftShift; keyStr = ";"
-		case '\'': keyStr = "'"
-		case '"': modifier = ModLeftShift; keyStr = "'"
-		case '`': keyStr = "GRAVE"
-		case '~': modifier = ModLeftShift; keyStr = "GRAVE"
-		case ',': keyStr = ","
-		case '<': modifier = ModLeftShift; keyStr = ","
-		case '.': keyStr = "."
-		case '>': modifier = ModLeftShift; keyStr = "."
-		case '/': keyStr = "SLASH"
-		case '?': modifier = ModLeftShift; keyStr = "SLASH"
-		case ' ': keyStr = " "
-		case '\n': keyStr = "ENTER"
-		case '\t': keyStr = "TAB"
-		default:
+		if ks, ok := symbolMap[ch]; ok {
+			modifier = ks.modifier
+			keyStr = ks.keyStr
+		} else {
 			keyStr = string(ch) // Fallback
 		}
 	}
