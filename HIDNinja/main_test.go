@@ -45,23 +45,23 @@ func TestCharToKeystroke(t *testing.T) {
 	tests := []struct {
 		char        rune
 		expectedMod byte
-		expectedKey string
+		expectedKey byte
 	}{
-		{'A', ModLeftShift, "A"},
-		{'a', ModNone, "A"},
-		{'1', ModNone, "1"},
-		{'!', ModLeftShift, "1"},
-		{'-', ModNone, "MINUS"},
-		{'_', ModLeftShift, "MINUS"},
-		{'\n', ModNone, "ENTER"},
-		{',', ModNone, ","},
-		{'<', ModLeftShift, ","},
-		{'>', ModLeftShift, "."},
-		{' ', ModNone, " "},
-		{';', ModNone, ";"},
-		{':', ModLeftShift, ";"},
-		{'?', ModLeftShift, "SLASH"},
-		{'©', ModNone, "©"}, // Fallback case
+		{'A', ModLeftShift, 'A'},
+		{'a', ModNone, 'A'},
+		{'1', ModNone, '1'},
+		{'!', ModLeftShift, '1'},
+		{'-', ModNone, 'M'},
+		{'_', ModLeftShift, 'M'},
+		{'\n', ModNone, 'E'},
+		{',', ModNone, ','},
+		{'<', ModLeftShift, ','},
+		{'>', ModLeftShift, '.'},
+		{' ', ModNone, ' '},
+		{';', ModNone, ';'},
+		{':', ModLeftShift, ';'},
+		{'?', ModLeftShift, 'S'},
+		{'©', ModNone, byte('©')}, // Fallback case
 	}
 
 	for _, tt := range tests {

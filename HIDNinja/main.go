@@ -30,68 +30,68 @@ func sendKey(f *os.File, code []byte) error {
 // charToKeystroke takes a rune and returns the required modifier byte and string mapping for translation
 type keystroke struct {
 	modifier byte
-	keyStr   string
+	keyByte  byte
 }
 
 var symbolMap = map[rune]keystroke{
-	'!':  {ModLeftShift, "1"},
-	'@':  {ModLeftShift, "2"},
-	'#':  {ModLeftShift, "3"},
-	'$':  {ModLeftShift, "4"},
-	'%':  {ModLeftShift, "5"},
-	'^':  {ModLeftShift, "6"},
-	'&':  {ModLeftShift, "7"},
-	'*':  {ModLeftShift, "8"},
-	'(':  {ModLeftShift, "9"},
-	')':  {ModLeftShift, "0"},
-	'-':  {ModNone, "MINUS"},
-	'_':  {ModLeftShift, "MINUS"},
-	'=':  {ModNone, "EQUAL"},
-	'+':  {ModLeftShift, "EQUAL"},
-	'[':  {ModNone, "LEFTBRACE"},
-	'{':  {ModLeftShift, "LEFTBRACE"},
-	']':  {ModNone, "RIGHTBRACE"},
-	'}':  {ModLeftShift, "RIGHTBRACE"},
-	'\\': {ModNone, "BACKSLASH"},
-	'|':  {ModLeftShift, "BACKSLASH"},
-	';':  {ModNone, ";"},
-	':':  {ModLeftShift, ";"},
-	'\'': {ModNone, "'"},
-	'"':  {ModLeftShift, "'"},
-	'`':  {ModNone, "GRAVE"},
-	'~':  {ModLeftShift, "GRAVE"},
-	',':  {ModNone, ","},
-	'<':  {ModLeftShift, ","},
-	'.':  {ModNone, "."},
-	'>':  {ModLeftShift, "."},
-	'/':  {ModNone, "SLASH"},
-	'?':  {ModLeftShift, "SLASH"},
-	' ':  {ModNone, " "},
-	'\n': {ModNone, "ENTER"},
-	'\t': {ModNone, "TAB"},
+	'!':  {ModLeftShift, '1'},
+	'@':  {ModLeftShift, '2'},
+	'#':  {ModLeftShift, '3'},
+	'$':  {ModLeftShift, '4'},
+	'%':  {ModLeftShift, '5'},
+	'^':  {ModLeftShift, '6'},
+	'&':  {ModLeftShift, '7'},
+	'*':  {ModLeftShift, '8'},
+	'(':  {ModLeftShift, '9'},
+	')':  {ModLeftShift, '0'},
+	'-':  {ModNone, 'M'},
+	'_':  {ModLeftShift, 'M'},
+	'=':  {ModNone, 'E'},
+	'+':  {ModLeftShift, 'E'},
+	'[':  {ModNone, 'L'},
+	'{':  {ModLeftShift, 'L'},
+	']':  {ModNone, 'R'},
+	'}':  {ModLeftShift, 'R'},
+	'\\': {ModNone, 'B'},
+	'|':  {ModLeftShift, 'B'},
+	';':  {ModNone, ';'},
+	':':  {ModLeftShift, ';'},
+	'\'': {ModNone, '\''},
+	'"':  {ModLeftShift, '\''},
+	'`':  {ModNone, 'G'},
+	'~':  {ModLeftShift, 'G'},
+	',':  {ModNone, ','},
+	'<':  {ModLeftShift, ','},
+	'.':  {ModNone, '.'},
+	'>':  {ModLeftShift, '.'},
+	'/':  {ModNone, 'S'},
+	'?':  {ModLeftShift, 'S'},
+	' ':  {ModNone, ' '},
+	'\n': {ModNone, 'E'},
+	'\t': {ModNone, 'T'},
 }
 
-func charToKeystroke(ch rune) (byte, string) {
+func charToKeystroke(ch rune) (byte, byte) {
 	var modifier byte = ModNone
-	var keyStr string
+	var keyByte byte
 
 	switch {
 	case ch >= 'A' && ch <= 'Z':
 		modifier = ModLeftShift // LSHIFT
-		keyStr = string(ch)
+		keyByte = byte(ch)
 	case ch >= 'a' && ch <= 'z':
-		keyStr = string(ch - 32)
+		keyByte = byte(ch - 32)
 	case ch >= '0' && ch <= '9':
-		keyStr = string(ch)
+		keyByte = byte(ch)
 	default:
 		if ks, ok := symbolMap[ch]; ok {
 			modifier = ks.modifier
-			keyStr = ks.keyStr
+			keyByte = ks.keyByte
 		} else {
-			keyStr = string(ch) // Fallback
+			keyByte = byte(ch) // Fallback
 		}
 	}
-	return modifier, keyStr
+	return modifier, keyByte
 }
 
 // executePayloadWithFile processes a payload string and writes it to the provided file descriptor.
@@ -101,13 +101,9 @@ func executePayloadWithFile(f *os.File, payloadString string) bool {
 
 	//run through each character/rune in the payload string, translate it to a scancode and send it to the virtual HID
 	for _, ch := range payloadString {
-		modifier, keyStr := charToKeystroke(ch)
+		modifier, keyByte := charToKeystroke(ch)
 
-		var runeKey rune
-		if len(keyStr) > 0 {
-			runeKey = rune(keyStr[0])
-		}
-
+		runeKey := rune(keyByte)
 		key := translationLayer(runeKey)
 
 		payloadBuf[0] = modifier
