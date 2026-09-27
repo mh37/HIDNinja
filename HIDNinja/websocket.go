@@ -62,7 +62,7 @@ func reader(conn *websocket.Conn) {
 		}
 
 		//execute payload
-		executePayload(string(msg))
+		go executePayload(string(msg))
 	}
 }
 
